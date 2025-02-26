@@ -24,3 +24,27 @@ Skeleton:
 | 固定翼自稳算法 | 必需   | 未实现 |
 | 多旋翼手动算法 | 可选   | 未实现 |
 
+>文件结构:
+
+```
+EspFlight/
+│── CMakeLists.txt
+│── main/
+│   ├── CMakeLists.txt
+│   ├── main.c
+│── components/
+│   ├── algorithm/
+│   │   ├── CMakeLists.txt
+│   │   ├── pid.c
+│   │   ├── include/
+│   │   │   ├── pid.h
+|   |   |   ...
+│   ├── drivers/
+│   │   ├── CMakeLists.txt
+│   │   ├── i2c.c
+│   │   ├── include/
+│   │   │   ├── i2c.h
+|   |   |   ...
+│── sdkconfig
+
+```

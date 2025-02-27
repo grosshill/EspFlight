@@ -1,4 +1,7 @@
-set(SRC_FILES i2c_manager.c)
+set(SRC_FILES 
+    i2c_manager.c
+    mpu6050.c
+    )
 
 idf_component_register(
     SRCS ${SRC_FILES}

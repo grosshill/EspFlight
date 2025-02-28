@@ -191,24 +191,24 @@ enum mpu6050_temp_setup {
 
 esp_err_t mpu6050_init(i2c_master_dev_handle_t* dev_handle, enum mpu6050_clk_setup clk_setup);
 
-esp_err_t mpu6050_set_freq(uint16_t freq, i2c_master_bus_handle_t *mst_handle, i2c_master_dev_handle_t *dev_handle);
+esp_err_t mpu6050_set_freq(i2c_master_dev_handle_t *dev_handle, uint16_t freq);
 
-esp_err_t mpu6050_device_setup(enum mpu6050_device_setup setup, i2c_master_bus_handle_t *mst_handle, i2c_master_dev_handle_t *dev_handle);
+esp_err_t mpu6050_device_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6050_device_setup setup);
 
-esp_err_t mpu6050_gyro_range_setup(enum mpu6050_gyro_setup setup, i2c_master_bus_handle_t *mst_handle, i2c_master_dev_handle_t *dev_handle);
+esp_err_t mpu6050_gyro_range_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6050_gyro_setup setup);
 
-esp_err_t mpu6050_gyro_read(mpu6050_gyro_pack *gyro_pack, i2c_master_bus_handle_t *mst_handle, i2c_master_dev_handle_t *dev_handle);
+esp_err_t mpu6050_gyro_read(i2c_master_dev_handle_t *dev_handle, mpu6050_gyro_pack *gyro_pack);
 
-esp_err_t mpu6050_accel_range_setup(enum mpu6050_accel_setup setup, i2c_master_bus_handle_t *mst_handle, i2c_master_dev_handle_t *dev_handle);
+esp_err_t mpu6050_accel_range_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6050_accel_setup setup);
 
-esp_err_t mpu6050_accel_hpf_setup(enum mpu6050_accel_hpf_setup setup, i2c_master_bus_handle_t *mst_handle, i2c_master_dev_handle_t *dev_handle);
+esp_err_t mpu6050_accel_hpf_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6050_accel_hpf_setup setup);
 
-esp_err_t mpu6050_accel_read(mpu6050_accel_pack *accel_pack, i2c_master_bus_handle_t *mst_handle, i2c_master_dev_handle_t *dev_handle);
+esp_err_t mpu6050_accel_read(i2c_master_dev_handle_t *dev_handle, mpu6050_accel_pack *accel_pack);
 
-esp_err_t mpu6050_clk_setup(enum mpu6050_clk_setup setup, i2c_master_bus_handle_t *mst_handle, i2c_master_dev_handle_t *dev_handle);
+esp_err_t mpu6050_clk_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6050_clk_setup setup);
 
-esp_err_t mpu6050_temp_setup(enum mpu6050_temp_setup setup, i2c_master_bus_handle_t *mst_handle, i2c_master_dev_handle_t *dev_handle);
+esp_err_t mpu6050_temp_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6050_temp_setup setup);
 
-esp_err_t mpu6050_temp_read(mpu6050_temp_pack *temp_pack, i2c_master_bus_handle_t *mst_handle, i2c_master_dev_handle_t *dev_handle);
+esp_err_t mpu6050_temp_read(i2c_master_dev_handle_t *dev_handle, mpu6050_temp_pack *temp_pack);
 
 #endif

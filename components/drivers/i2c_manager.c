@@ -42,30 +42,25 @@ esp_err_t i2c_add_device(i2c_device_config_t* dev_cfg, i2c_master_bus_handle_t* 
     return ESP_OK;
 }
 
-esp_err_t i2c_write(i2c_device_handle_t* i2c_dev, uint8_t reg_addr, const uint8_t* data_word, uint8_t data_length)
+esp_err_t i2c_write(i2c_master_dev_handle_t* dev_handle, uint8_t reg_addr, const uint8_t* data_word, uint8_t data_length)
 {   
-    if (xSemaphoreTake(i2c_dev->mutex, I2C_TIMEOUT) != pdTRUE) return ESP_ERR_TIMEOUT;
-
     uint8_t write_buffer[data_length + 1];
     write_buffer[0] = reg_addr;
     memcpy(&write_buffer[1], data_word, data_length);
 
-    esp_err_t ret = i2c_master_transmit(i2c_dev->dev_handle, write_buffer, sizeof(uint8_t) * (data_length + 1), I2C_TIMEOUT);
+    esp_err_t ret = i2c_master_transmit(dev_handle, write_buffer, sizeof(uint8_t) * (data_length + 1), I2C_TIMEOUT);
     if (ret != ESP_OK) 
     {
         ESP_LOGI("I2C", "I2C write failed with error: %d", ret);
         return ret;
     }
 
-    xSemaphoreGive(i2c_dev->mutex);
     return ESP_OK;
 }
 
-esp_err_t i2c_read(i2c_device_handle_t* i2c_dev, uint8_t reg_addr, uint8_t *data, uint8_t data_length)
+esp_err_t i2c_read(i2c_master_dev_handle_t* dev_handle, uint8_t reg_addr, uint8_t *data, uint8_t data_length)
 {   
-    if (xSemaphoreTake(i2c_dev->mutex, I2C_TIMEOUT) != pdTRUE) return ESP_ERR_TIMEOUT;
-
-    esp_err_t ret = i2c_master_transmit_receive(i2c_dev->dev_handle, &reg_addr, sizeof(reg_addr), data, data_length * sizeof(uint8_t), I2C_TIMEOUT);
+    esp_err_t ret = i2c_master_transmit_receive(dev_handle, &reg_addr, sizeof(reg_addr), data, data_length * sizeof(uint8_t), I2C_TIMEOUT);
 
     if (ret != ESP_OK)
     {
@@ -73,6 +68,5 @@ esp_err_t i2c_read(i2c_device_handle_t* i2c_dev, uint8_t reg_addr, uint8_t *data
         return ret;
     }
     
-    xSemaphoreGive(i2c_dev->mutex);
     return ESP_OK;
 }

@@ -8,8 +8,8 @@
 #include "esp_log.h"
 #include "driver/i2c_master.h"
 
-#define I2C_INTERNAL_SCL GPIO_NUM_0
-#define I2C_INTERNAL_SDA GPIO_NUM_1
+#define I2C_INTERNAL_SCL GPIO_NUM_12
+#define I2C_INTERNAL_SDA GPIO_NUM_14
 #define I2C_EXTERNAL_SCL GPIO_NUM_2
 #define I2C_EXTERNAL_SDA GPIO_NUM_3
 
@@ -28,17 +28,17 @@ typedef struct {
 } i2c_general_config_t;
 
 
-typedef struct {
-    i2c_master_dev_handle_t dev_handle;
-    SemaphoreHandle_t mutex;
-} i2c_device_handle_t;
+// typedef struct {
+//     i2c_master_dev_handle_t dev_handle;
+//     SemaphoreHandle_t mutex;
+// } i2c_device_handle_t;
 
 esp_err_t i2c_init(i2c_general_config_t* gen_cfg, i2c_master_bus_handle_t* bus_handle, i2c_master_dev_handle_t* dev_handle);
 
 esp_err_t i2c_add_device(i2c_device_config_t* dev_cfg, i2c_master_bus_handle_t* bus_handle, i2c_master_dev_handle_t* dev_handle);
 
-esp_err_t i2c_write(i2c_device_handle_t* i2c_dev, uint8_t reg_addr, const uint8_t* data_word, uint8_t data_length);
+esp_err_t i2c_write(i2c_master_dev_handle_t* dev_handle, uint8_t reg_addr, const uint8_t* data_word, uint8_t data_length);
 
-esp_err_t i2c_read(i2c_device_handle_t* i2c_dev, uint8_t reg_addr, uint8_t* data, uint8_t data_length);
+esp_err_t i2c_read(i2c_master_dev_handle_t* dev_handle, uint8_t reg_addr, uint8_t* data, uint8_t data_length);
 
 #endif

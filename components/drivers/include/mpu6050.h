@@ -189,7 +189,7 @@ enum mpu6050_temp_setup {
     TEMP_EN = 1,
 };
 
-esp_err_t mpu6050_init(i2c_device_handle_t* dev_handle, enum mpu6050_clk_setup clk_setup);
+esp_err_t mpu6050_init(i2c_master_dev_handle_t* dev_handle, enum mpu6050_clk_setup clk_setup);
 
 esp_err_t mpu6050_set_freq(uint16_t freq, i2c_master_bus_handle_t *mst_handle, i2c_master_dev_handle_t *dev_handle);
 

@@ -3,7 +3,7 @@
 #include "esp_err.h"
 #include "esp_log.h"
 
-esp_err_t mpu6050_init(i2c_device_handle_t* dev_handle, enum mpu6050_clk_setup clk_setup)
+esp_err_t mpu6050_init(i2c_master_dev_handle_t* dev_handle, enum mpu6050_clk_setup clk_setup)
 {
     uint8_t data;
     esp_err_t ret = i2c_read(dev_handle, MPU6050_PWR_MGMT_1, &data, 1);

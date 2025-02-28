@@ -6,21 +6,14 @@
 #define I2C_TIMEOUT pdMS_TO_TICKS(100)
 
 
-esp_err_t i2c_init(i2c_general_config_t* gen_cfg, i2c_master_bus_handle_t* bus_handle, i2c_master_dev_handle_t* dev_handle)
+esp_err_t i2c_bus_init(i2c_master_bus_config_t* bus_cfg, i2c_master_bus_handle_t* bus_handle)
 {
-    if (gen_cfg == NULL || bus_handle == NULL || dev_handle == NULL) return ESP_ERR_INVALID_ARG;
+    if (bus_cfg == NULL || bus_handle == NULL) return ESP_ERR_INVALID_ARG;
 
-    esp_err_t ret = i2c_new_master_bus(&gen_cfg->bus_cfg, bus_handle);
+    esp_err_t ret = i2c_new_master_bus(bus_cfg, bus_handle);
     if (ret != ESP_OK) 
     {
         ESP_LOGE("I2C", "Failed to initialize I2C bus: %d", ret);
-        return ret;
-    }
-
-    ret = i2c_master_bus_add_device(*bus_handle, &gen_cfg->dev_cfg, dev_handle);
-    if (ret != ESP_OK) {
-        ESP_LOGE("I2C", "Failed to add I2C device: %d", ret);
-        i2c_del_master_bus(*bus_handle);
         return ret;
     }
 

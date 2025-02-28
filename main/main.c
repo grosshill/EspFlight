@@ -25,7 +25,6 @@ i2c_master_bus_config_t i2c_master_bus_config = {
 
 hmc5883l_pack_t hmc5883l_pack;
 
-i2c_general_config_t i2c_general_config;
 i2c_master_bus_handle_t i2c_bus_handle;
 
 void hmc5883l_task(void* param);
@@ -54,20 +53,21 @@ void app_main(void)
     i2c_master_dev_handle_t bmp280_handle;
     i2c_master_dev_handle_t hmc5883l_handle;
 
-    i2c_general_config.bus_cfg = i2c_master_bus_config;
-    i2c_general_config.dev_cfg = mpu6050_cfg;
-
-    ret = i2c_init(&i2c_general_config, &i2c_bus_handle, &hmc5883l_handle);
+    ret = i2c_bus_init(&i2c_master_bus_config, &i2c_bus_handle);
     if (ret != ESP_OK) return;
     ESP_LOGI("EspFlight", "I2C bus created successfully");
+
+    // ret = i2c_add_device(&mpu6050_cfg, i2c_bus_handle, &mpu6050_handle);
+    // if (ret != ESP_OK) return;
+    // ESP_LOGI("EspFlight", "I2C bus added mpu6050");
+
+    ret = i2c_add_device(&hmc5883l_cfg, i2c_bus_handle, &hmc5883l_handle);
+    if (ret != ESP_OK) return;
+    ESP_LOGI("EspFlight", "I2C bus added hmm5883l");
 
     // ret = i2c_add_device(&bmp280_cfg, i2c_bus_handle, &bmp280_handle);
     // if (ret != ESP_OK) return;
     // ESP_LOGI("EspFlight", "I2C bus added bmp280");
-
-    // ret = i2c_add_device(&hmc5883l_cfg, i2c_bus_handle, &hmc5883l_handle);
-    // if (ret != ESP_OK) return;
-    // ESP_LOGI("EspFlight", "I2C bus added hmm5883l");
 
     vTaskDelay(pdMS_TO_TICKS(1000));
 

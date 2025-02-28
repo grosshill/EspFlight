@@ -1,0 +1,8 @@
+#ifndef HMC5883L_H
+#define HMC5883L_H
+
+#define HMC5883L_DEVICE 0x1E
+#define HMC5883L_DEVICE_WRITE 0x3C
+#define HMC5883L_DEVICE_READ 0x3D
+
+#endif

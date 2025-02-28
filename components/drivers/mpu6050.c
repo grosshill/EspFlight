@@ -112,3 +112,65 @@ esp_err_t mpu6050_accel_hpf_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6
 
     return ESP_OK;
 }
+
+
+esp_err_t mpu6050_accel_read(i2c_master_dev_handle_t *dev_handle, mpu6050_accel_pack *accel_pack)
+{   
+    uint8_t data_pack[6];
+    esp_err_t ret = i2c_read(dev_handle, MPU6050_ACCEL_XOUT_H, data_pack, 6);
+    if (ret != ESP_OK) return ret;
+
+    accel_pack->rax = (data_pack[0] << 8) | data_pack[1];
+    accel_pack->ray = (data_pack[2] << 8) | data_pack[3];
+    accel_pack->raz = (data_pack[4] << 8) | data_pack[5];
+
+    return ESP_OK;
+}
+
+
+esp_err_t mpu6050_clk_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6050_clk_setup setup)
+{
+    uint8_t data;
+    esp_err_t ret = i2c_read(dev_handle, MPU6050_PWR_MGMT_1, &data, 1);
+    if (ret != ESP_OK) return ret;
+
+    data &= 0x08;
+    data |= (uint8_t)(setup & 0x07);
+
+    ret = i2c_write(dev_handle, MPU6050_PWR_MGMT_1, &data, 1);
+    if (ret != ESP_OK) return ret;
+
+    ESP_LOGI("MPU6050", "clock setup complete.");
+    
+    return ESP_OK;
+}
+
+
+esp_err_t mpu6050_temp_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6050_temp_setup setup)
+{
+    uint8_t data;
+    esp_err_t ret = i2c_read(dev_handle, MPU6050_PWR_MGMT_1, &data, 1);
+    if (ret != ESP_OK) return ret;
+
+    data &= 0x07;
+    data |= (uint8_t)((setup & 0x01) << 3);
+    
+    ret = i2c_write(dev_handle, MPU6050_PWR_MGMT_1, &data, 1);
+    if (ret != ESP_OK) return ret;
+    
+    ESP_LOGI("MPU6050", "temperature setup complete.");
+    
+    return ESP_OK;
+}
+
+
+esp_err_t mpu6050_temp_read(i2c_master_dev_handle_t *dev_handle, mpu6050_temp_pack *temp_pack)
+{
+    uint8_t data_pack[2];
+    esp_err_t ret = i2c_read(dev_handle, MPU6050_TEMP_OUT_H, data_pack, 2);
+    if (ret != ESP_OK) return ret;
+
+    temp_pack->temp = (data_pack[0] << 8) | data_pack[1];
+    
+    return ESP_OK;
+}

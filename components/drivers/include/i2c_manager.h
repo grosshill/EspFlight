@@ -13,7 +13,7 @@
 #define I2C_EXTERNAL_SDA GPIO_NUM_3
 
 #define I2C_TIMEOUT pdMS_TO_TICKS(100)  // 100ms timeout
-
+#define I2C_CLK_FREQ 400000
 
 enum i2c_port_id {
     i2c_internal_port = 0,

@@ -1,0 +1,8 @@
+#ifndef BMP280_H
+#define BMP280_H
+
+#define BMP280_DEVICE 0x76
+#define BMP280_DEVICE_WRITE 0xEC
+#define BMP280_DEVICE_READ 0xED
+
+#endif

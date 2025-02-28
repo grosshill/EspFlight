@@ -38,10 +38,10 @@ typedef struct {
 
 esp_err_t i2c_init(i2c_general_config_t* gen_cfg, i2c_master_bus_handle_t* bus_handle, i2c_master_dev_handle_t* dev_handle);
 
-esp_err_t i2c_add_device(i2c_device_config_t* dev_cfg, i2c_master_bus_handle_t* bus_handle, i2c_master_dev_handle_t* dev_handle);
+esp_err_t i2c_add_device(i2c_device_config_t* dev_cfg, i2c_master_bus_handle_t bus_handle, i2c_master_dev_handle_t* dev_handle);
 
-esp_err_t i2c_write(i2c_master_dev_handle_t* dev_handle, uint8_t reg_addr, const uint8_t* data_word, uint8_t data_length);
+esp_err_t i2c_write(i2c_master_dev_handle_t dev_handle, uint8_t reg_addr, const uint8_t* data_word, uint8_t data_length);
 
-esp_err_t i2c_read(i2c_master_dev_handle_t* dev_handle, uint8_t reg_addr, uint8_t* data, uint8_t data_length);
+esp_err_t i2c_read(i2c_master_dev_handle_t dev_handle, uint8_t reg_addr, uint8_t* data, uint8_t data_length);
 
 #endif

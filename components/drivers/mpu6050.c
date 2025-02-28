@@ -4,7 +4,7 @@
 #include "esp_log.h"
 
 
-esp_err_t mpu6050_init(i2c_master_dev_handle_t* dev_handle, enum mpu6050_clk_setup clk_setup)
+esp_err_t mpu6050_init(i2c_master_dev_handle_t dev_handle, enum mpu6050_clk_setup clk_setup)
 {
     uint8_t data;
     esp_err_t ret = i2c_read(dev_handle, MPU6050_PWR_MGMT_1, &data, 1);
@@ -21,7 +21,7 @@ esp_err_t mpu6050_init(i2c_master_dev_handle_t* dev_handle, enum mpu6050_clk_set
 }
 
 
-esp_err_t mpu6050_set_freq(i2c_master_dev_handle_t* dev_handle, uint16_t freq) 
+esp_err_t mpu6050_set_freq(i2c_master_dev_handle_t dev_handle, uint16_t freq) 
 {
     if (freq > 8000) return ESP_ERR_INVALID_ARG;
 
@@ -36,7 +36,7 @@ esp_err_t mpu6050_set_freq(i2c_master_dev_handle_t* dev_handle, uint16_t freq)
 }
 
 
-esp_err_t mpu6050_device_setup(i2c_master_dev_handle_t* dev_handle, enum mpu6050_device_setup setup)
+esp_err_t mpu6050_device_setup(i2c_master_dev_handle_t dev_handle, enum mpu6050_device_setup setup)
 {
     uint8_t data = (uint8_t)(setup & 0x07);
     
@@ -49,7 +49,7 @@ esp_err_t mpu6050_device_setup(i2c_master_dev_handle_t* dev_handle, enum mpu6050
 }
 
 
-esp_err_t mpu6050_gyro_range_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6050_gyro_setup setup)
+esp_err_t mpu6050_gyro_range_setup(i2c_master_dev_handle_t dev_handle, enum mpu6050_gyro_setup setup)
 {
     uint8_t data = (uint8_t)((setup & 0x03) << 3);
     
@@ -62,7 +62,7 @@ esp_err_t mpu6050_gyro_range_setup(i2c_master_dev_handle_t *dev_handle, enum mpu
 }
 
 
-esp_err_t mpu6050_gyro_read(i2c_master_dev_handle_t *dev_handle, mpu6050_gyro_pack *gyro_pack)
+esp_err_t mpu6050_gyro_read(i2c_master_dev_handle_t dev_handle, mpu6050_gyro_pack *gyro_pack)
 {
     uint8_t data_pack[6];
     
@@ -77,7 +77,7 @@ esp_err_t mpu6050_gyro_read(i2c_master_dev_handle_t *dev_handle, mpu6050_gyro_pa
 }
 
 
-esp_err_t mpu6050_accel_range_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6050_accel_setup setup)
+esp_err_t mpu6050_accel_range_setup(i2c_master_dev_handle_t dev_handle, enum mpu6050_accel_setup setup)
 {
     uint8_t data;
     
@@ -96,7 +96,7 @@ esp_err_t mpu6050_accel_range_setup(i2c_master_dev_handle_t *dev_handle, enum mp
 }
 
 
-esp_err_t mpu6050_accel_hpf_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6050_accel_hpf_setup setup)
+esp_err_t mpu6050_accel_hpf_setup(i2c_master_dev_handle_t dev_handle, enum mpu6050_accel_hpf_setup setup)
 {
     uint8_t data;
     esp_err_t ret = i2c_read(dev_handle, MPU6050_ACCEL_CONFIG, &data, 1);
@@ -114,7 +114,7 @@ esp_err_t mpu6050_accel_hpf_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6
 }
 
 
-esp_err_t mpu6050_accel_read(i2c_master_dev_handle_t *dev_handle, mpu6050_accel_pack *accel_pack)
+esp_err_t mpu6050_accel_read(i2c_master_dev_handle_t dev_handle, mpu6050_accel_pack *accel_pack)
 {   
     uint8_t data_pack[6];
     esp_err_t ret = i2c_read(dev_handle, MPU6050_ACCEL_XOUT_H, data_pack, 6);
@@ -128,7 +128,7 @@ esp_err_t mpu6050_accel_read(i2c_master_dev_handle_t *dev_handle, mpu6050_accel_
 }
 
 
-esp_err_t mpu6050_clk_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6050_clk_setup setup)
+esp_err_t mpu6050_clk_setup(i2c_master_dev_handle_t dev_handle, enum mpu6050_clk_setup setup)
 {
     uint8_t data;
     esp_err_t ret = i2c_read(dev_handle, MPU6050_PWR_MGMT_1, &data, 1);
@@ -146,7 +146,7 @@ esp_err_t mpu6050_clk_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6050_cl
 }
 
 
-esp_err_t mpu6050_temp_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6050_temp_setup setup)
+esp_err_t mpu6050_temp_setup(i2c_master_dev_handle_t dev_handle, enum mpu6050_temp_setup setup)
 {
     uint8_t data;
     esp_err_t ret = i2c_read(dev_handle, MPU6050_PWR_MGMT_1, &data, 1);
@@ -164,7 +164,7 @@ esp_err_t mpu6050_temp_setup(i2c_master_dev_handle_t *dev_handle, enum mpu6050_t
 }
 
 
-esp_err_t mpu6050_temp_read(i2c_master_dev_handle_t *dev_handle, mpu6050_temp_pack *temp_pack)
+esp_err_t mpu6050_temp_read(i2c_master_dev_handle_t dev_handle, mpu6050_temp_pack *temp_pack)
 {
     uint8_t data_pack[2];
     esp_err_t ret = i2c_read(dev_handle, MPU6050_TEMP_OUT_H, data_pack, 2);

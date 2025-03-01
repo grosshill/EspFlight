@@ -1,7 +1,7 @@
 set(SRC_FILES 
     i2c_manager.c
     mpu6050.c
-    bmp280.c
+    bmp180.c
     hmc5883l.c
     )
 

@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include "i2c_manager.h"
 #include "mpu6050.h"
-#include "bmp280.h"
+#include "bmp180.h"
 #include "hmc5883l.h"
 #include "pid.h"
 
@@ -23,11 +23,13 @@ i2c_master_bus_config_t i2c_master_bus_config = {
     .flags.enable_internal_pullup = true
 };
 
-hmc5883l_pack_t hmc5883l_pack;
+mpu6050_accel_pack_t mpu6050_accel_pack;
+mpu6050_gyro_pack_t mpu6050_gyro_pack;
 
 i2c_master_bus_handle_t i2c_bus_handle;
 
-void hmc5883l_task(void* param);
+void mpu6050_task(void* param);
+void bmp180_task(void* param);
 
 void app_main(void)
 {   
@@ -37,57 +39,62 @@ void app_main(void)
         .scl_speed_hz = I2C_CLK_FREQ,
     };
 
-    i2c_device_config_t bmp280_cfg = {
+    i2c_device_config_t bmp180_cfg = {
         .dev_addr_length = I2C_ADDR_BIT_LEN_7,
-        .device_address = BMP280_DEVICE,
-        .scl_speed_hz = I2C_CLK_FREQ,
-    };
-
-    i2c_device_config_t hmc5883l_cfg = {
-        .dev_addr_length = I2C_ADDR_BIT_LEN_7,
-        .device_address = HMC5883L_DEVICE,
+        .device_address = BMP180_DEVICE,
         .scl_speed_hz = I2C_CLK_FREQ,
     };
 
     i2c_master_dev_handle_t mpu6050_handle;
-    i2c_master_dev_handle_t bmp280_handle;
-    i2c_master_dev_handle_t hmc5883l_handle;
+    i2c_master_dev_handle_t bmp180_handle;
 
-    ret = i2c_bus_init(&i2c_master_bus_config, &i2c_bus_handle);
+    ret = i2c_new_master_bus(&i2c_master_bus_config, &i2c_bus_handle);
     if (ret != ESP_OK) return;
     ESP_LOGI("EspFlight", "I2C bus created successfully");
 
-    // ret = i2c_add_device(&mpu6050_cfg, i2c_bus_handle, &mpu6050_handle);
-    // if (ret != ESP_OK) return;
-    // ESP_LOGI("EspFlight", "I2C bus added mpu6050");
+    i2c_master_bus_add_device(i2c_bus_handle, &bmp180_cfg, &bmp180_handle);
+    i2c_master_bus_add_device(i2c_bus_handle, &mpu6050_cfg, &mpu6050_handle);
 
-    ret = i2c_add_device(&hmc5883l_cfg, i2c_bus_handle, &hmc5883l_handle);
-    if (ret != ESP_OK) return;
-    ESP_LOGI("EspFlight", "I2C bus added hmm5883l");
-
-    // ret = i2c_add_device(&bmp280_cfg, i2c_bus_handle, &bmp280_handle);
-    // if (ret != ESP_OK) return;
-    // ESP_LOGI("EspFlight", "I2C bus added bmp280");
+    mpu6050_init(mpu6050_handle);
 
     vTaskDelay(pdMS_TO_TICKS(1000));
-
-    xTaskCreatePinnedToCore(hmc5883l_task, "HMC5883L", 4096, (void*)hmc5883l_handle, 5, NULL, 0);
+    
+    // xTaskCreatePinnedToCore(mpu6050_task, "MPU6050", 10240, (void*)mpu6050_handle, 5, NULL, 0);
+    vTaskDelay(pdMS_TO_TICKS(100));
+    xTaskCreatePinnedToCore(bmp180_task, "BMP180", 10240, (void*)bmp180_handle, 5, NULL, 0);
 
     ESP_LOGI("EspFlight", "Initialize I2C");
 }
 
 
-void hmc5883l_task(void* param)
+void mpu6050_task(void* param)
 {
-    i2c_master_dev_handle_t hmc5883l_handle = (i2c_master_dev_handle_t) param;
-    ret = hmc5883l_init(hmc5883l_handle);
-    if (ret != ESP_OK) return;
+    i2c_master_dev_handle_t mpu6050_handle = (i2c_master_dev_handle_t) param;
+    ESP_LOGI("LOG1" , "handle got!");
     while(1)
     {
-        ret = hmc5883l_read_raw(hmc5883l_handle, &hmc5883l_pack);
+        mpu6050_accel_read(mpu6050_handle, &mpu6050_accel_pack);
+        mpu6050_gyro_read(mpu6050_handle, &mpu6050_gyro_pack);
+        
         if (ret != ESP_OK) return;
         vTaskDelay(pdMS_TO_TICKS(1000));
 
-        ESP_LOGI("HMC5883L", "GX: %5f GY: %5f GZ: %5f", hmc5883l_pack.gx, hmc5883l_pack.gy, hmc5883l_pack.gz);
+        ESP_LOGI("MPU6050", "GX: %d GY: %d GZ: %d", mpu6050_accel_pack.rax, mpu6050_accel_pack.ray, mpu6050_accel_pack.raz);
+        
+        ESP_LOGI("MPU6050", "GX: %d GY: %d GZ: %d", mpu6050_gyro_pack.rgx, mpu6050_gyro_pack.rgy, mpu6050_gyro_pack.rgz);
     }
+}
+
+
+void bmp180_task(void* param)
+{
+    i2c_master_dev_handle_t bmp180_handle = (i2c_master_dev_handle_t) param;
+    bmp_colab_params_t colab = bmp180_init(bmp180_handle);
+    ESP_LOGI("LOG2", "handle got!");
+    while(1)
+    {
+        bmp180_read(bmp180_handle, colab);
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
+
 }

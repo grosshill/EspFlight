@@ -3,7 +3,7 @@
 
 #include "i2c_manager.h"
 
-#define HMC5883L_DEVICE 0x1C //0x1E
+#define HMC5883L_DEVICE 0x0D //0x1E
 #define HMC5883L_DEVICE_WRITE 0x3C
 #define HMC5883L_DEVICE_READ 0x3D
 

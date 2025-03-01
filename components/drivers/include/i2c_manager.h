@@ -19,23 +19,19 @@ enum i2c_port_id {
     i2c_internal_port = 0,
     i2c_external_port
 };
-
-// According to the documentation of ESP-IDF, i2c transmit and read
-// functions are equiped with bulit in mutex, so there is no need
-// for users to add SemaphoreMutex manually.
 /*
+  According to the documentation of ESP-IDF, i2c transmit and read
+  functions are equiped with bulit in mutex, so there is no need
+  for users to add SemaphoreMutex manually.
+
 typedef struct {
     i2c_master_dev_handle_t dev_handle;
     SemaphoreHandle_t mutex;
 } i2c_device_handle_t;
 */
 
-esp_err_t i2c_bus_init(i2c_master_bus_config_t* bus_cfg, i2c_master_bus_handle_t* bus_handle);
+esp_err_t i2c_write(i2c_master_dev_handle_t dev_handle, const uint8_t reg_addr, const uint8_t* data_word, const uint8_t data_length);
 
-esp_err_t i2c_add_device(i2c_device_config_t* dev_cfg, i2c_master_bus_handle_t bus_handle, i2c_master_dev_handle_t* dev_handle);
-
-esp_err_t i2c_write(i2c_master_dev_handle_t dev_handle, uint8_t reg_addr, const uint8_t* data_word, uint8_t data_length);
-
-esp_err_t i2c_read(i2c_master_dev_handle_t dev_handle, uint8_t reg_addr, uint8_t* data, uint8_t data_length);
+esp_err_t i2c_read(i2c_master_dev_handle_t dev_handle, const uint8_t reg_addr, uint8_t* data, const uint8_t data_length);
 
 #endif

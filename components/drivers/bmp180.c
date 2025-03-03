@@ -94,50 +94,6 @@ int32_t bmp180_read(i2c_master_dev_handle_t dev_handle, bmp_colab_params_t colab
     
     p = p + ((X1 + X2 + 3791) >> 4);
 
-
-
-    // int32_t x1 = (tep - colab.AC6) * colab.AC5 >> 15;
-
-    // int32_t x2 = (colab.MC << 11) / (x1 + colab.MD);
-
-    // int32_t t = (x1 + x2 + 8) >> 4;
-
-    // int32_t b6 = x1 + x2 - 4000;
-
-    // x1 = (b6 * b6 >> 12) * colab.B2 >> 11;
-
-    // x2 = colab.AC2 * b6 >> 11;
-
-    // int32_t x3 = x1 + x2;
-
-    // int32_t b3 = (((colab.AC1 << 2) + x3) + 2) >> 2;
-
-    // x1 = colab.AC3 * b6 >> 13;
-
-    // x2 = (b6 * b6 >> 12) * colab.B1 >> 16;
-
-    // x3 = (x1 + x2 + 2) >> 2;
-
-    // uint32_t b4 = colab.AC4 * (uint32_t)(x3 + 32768) >> 15;
-
-    // uint32_t b7 = ((uint32_t)hei - b3) * 50000;
-
-    // int32_t p;
-    // if(b7 < 0x80000000)
-    // {
-    //     p = (b7 << 1) / b4;
-    // }
-    // else
-    // {
-    //     p = b7 / b4 << 1;
-    // }
-
-    // x1 = (p >> 8) * (p >> 8);
-    // x1 = (x1 * 3038) >> 16;
-    // x2 = (-7375 * p) >> 16;
-
-    // p = p + ((x1 + x2 + 3791) >> 4);
-
     float height = 44330 * (1 - pow(p / 101325.0f, 0.190263));
 
     ESP_LOGI("BMP180", "temperature: %ld, pressure: %ld, height: %.10f", T, p, height);

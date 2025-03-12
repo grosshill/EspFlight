@@ -1,5 +1,4 @@
-build
-.vscode
-.cache
-sdkconfig
-sdkconfig.old
+*.devcontainer
+*.vscode
+*bulid
+*sdkconfig

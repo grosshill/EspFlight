@@ -59,9 +59,9 @@ void app_main(void)
 
     vTaskDelay(pdMS_TO_TICKS(1000));
     
-    // xTaskCreatePinnedToCore(mpu6050_task, "MPU6050", 10240, (void*)mpu6050_handle, 5, NULL, 0);
+    xTaskCreatePinnedToCore(mpu6050_task, "MPU6050", 10240, (void*)mpu6050_handle, 5, NULL, 0);
     vTaskDelay(pdMS_TO_TICKS(100));
-    xTaskCreatePinnedToCore(bmp180_task, "BMP180", 10240, (void*)bmp180_handle, 5, NULL, 0);
+    // xTaskCreatePinnedToCore(bmp180_task, "BMP180", 10240, (void*)bmp180_handle, 5, NULL, 0);
 
     ESP_LOGI("EspFlight", "Initialize I2C");
 }
@@ -77,11 +77,19 @@ void mpu6050_task(void* param)
         mpu6050_gyro_read(mpu6050_handle, &mpu6050_gyro_pack);
         
         if (ret != ESP_OK) return;
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(.0001));
 
-        ESP_LOGI("MPU6050", "GX: %d GY: %d GZ: %d", mpu6050_accel_pack.rax, mpu6050_accel_pack.ray, mpu6050_accel_pack.raz);
-        
-        ESP_LOGI("MPU6050", "GX: %d GY: %d GZ: %d", mpu6050_gyro_pack.rgx, mpu6050_gyro_pack.rgy, mpu6050_gyro_pack.rgz);
+        float ax = (float)mpu6050_accel_pack.rax / 4096.0;
+        float ay = (float)mpu6050_accel_pack.ray / 4096.0;
+        float az = (float)mpu6050_accel_pack.raz / 4096.0;
+
+        float r = (float)mpu6050_gyro_pack.rgx / 32.75;
+        float p = (float)mpu6050_gyro_pack.rgy / 32.75;
+        float y = (float)mpu6050_gyro_pack.rgz / 32.75;
+        // ESP_LOGI("MPU6050", "%d%d%d", mpu6050_accel_pack.rax, mpu6050_accel_pack.ray, mpu6050_accel_pack.raz);
+        ESP_LOGI("MPU6050", "");
+        ESP_LOGI("MPU6050", "ax: %.4fg ay: %.4fg az: %.4fg", ax, ay, az);
+        ESP_LOGI("MPU6050", "r: %.4fd/s p: %.4fd/s y: %.4fd/s", r, p, y);
     }
 }
 

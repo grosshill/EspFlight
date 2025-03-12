@@ -6,6 +6,7 @@
 #include "esp_err.h"
 #include "esp_log.h"
 #include "i2c_manager.h"
+#include "kalman.h"
 
 #define MPU6050_DEVICE_L 0x68
 #define MPU6050_DEVICE_H 0x69
@@ -136,6 +137,13 @@ typedef struct {
 } mpu6050_gyro_pack_t;
 
 typedef struct {
+    mpu6050_accel_pack_t accl_r;
+    mpu6050_gyro_pack_t gyro_r;
+    kalman_t kalman;
+} mpu6050_output_t;
+
+
+typedef struct {
     int16_t temp;
 } mpu6050_temp_pack_t;
 
@@ -209,5 +217,7 @@ esp_err_t mpu6050_clk_setup(i2c_master_dev_handle_t dev_handle, enum mpu6050_clk
 esp_err_t mpu6050_temp_setup(i2c_master_dev_handle_t dev_handle, enum mpu6050_temp_setup setup);
 
 esp_err_t mpu6050_temp_read(i2c_master_dev_handle_t dev_handle, mpu6050_temp_pack_t* temp_pack);
+
+esp_err_t mpu6050_get_pos(i2c_master_dev_handle_t dev_handle, mpu6050_output_t* out_put);
 
 #endif

@@ -31,6 +31,23 @@ esp_err_t mpu6050_init(i2c_master_dev_handle_t dev_handle)
 }
 
 
+// esp_err_t mpu6050_init(i2c_master_dev_handle_t dev_handle)
+// {
+//     uint8_t data = 0;
+//     i2c_write(dev_handle, MPU6050_PWR_MGMT_1, &data, 1);
+
+//     data = 0x07;
+//     i2c_write(dev_handle, MPU6050_SMPLRT_DIV, &data, 1);
+
+//     data = 0x00;
+//     i2c_write(dev_handle, MPU6050_ACCEL_CONFIG, &data, 1);
+
+//     i2c_write(dev_handle, MPU6050_GYRO_CONFIG, &data, 1);
+
+//     return ESP_OK;
+// }
+
+
 esp_err_t mpu6050_set_freq(i2c_master_dev_handle_t dev_handle, uint16_t freq) 
 {
     if (freq > 8000) return ESP_ERR_INVALID_ARG;
@@ -63,7 +80,7 @@ esp_err_t mpu6050_gyro_range_setup(i2c_master_dev_handle_t dev_handle, enum mpu6
 {
     uint8_t data = (uint8_t)((setup & 0x03) << 3);
     
-    esp_err_t ret = i2c_write(dev_handle, MPU6050_ACCEL_CONFIG, &data, 1);
+    esp_err_t ret = i2c_write(dev_handle, MPU6050_GYRO_CONFIG, &data, 1);
     if (ret != ESP_OK) return ret;    
 
     ESP_LOGI("MPU6050", "gyro setup complete.");
@@ -76,12 +93,12 @@ esp_err_t mpu6050_gyro_read(i2c_master_dev_handle_t dev_handle, mpu6050_gyro_pac
 {
     uint8_t data_pack[6];
     
-    esp_err_t ret = i2c_read(dev_handle, MPU6050_ACCEL_XOUT_H, data_pack, 6);
+    esp_err_t ret = i2c_read(dev_handle, MPU6050_GYRO_XOUT_H, data_pack, 6);
     if (ret != ESP_OK) return ret;
 
-    gyro_pack->rgx = (data_pack[0] << 8) | data_pack[1];
-    gyro_pack->rgy = (data_pack[2] << 8) | data_pack[3];
-    gyro_pack->rgz = (data_pack[4] << 8) | data_pack[5];
+    gyro_pack->rgx = (int16_t)(data_pack[0] << 8 | data_pack[1]);
+    gyro_pack->rgy = (int16_t)(data_pack[2] << 8 | data_pack[3]);
+    gyro_pack->rgz = (int16_t)(data_pack[4] << 8 | data_pack[5]);
 
     return ESP_OK;
 }
@@ -130,9 +147,9 @@ esp_err_t mpu6050_accel_read(i2c_master_dev_handle_t dev_handle, mpu6050_accel_p
     esp_err_t ret = i2c_read(dev_handle, MPU6050_ACCEL_XOUT_H, data_pack, 6);
     if (ret != ESP_OK) return ret;
 
-    accel_pack->rax = (data_pack[0] << 8) | data_pack[1];
-    accel_pack->ray = (data_pack[2] << 8) | data_pack[3];
-    accel_pack->raz = (data_pack[4] << 8) | data_pack[5];
+    accel_pack->rax = (int16_t)(data_pack[0] << 8 | data_pack[1]);
+    accel_pack->ray = (int16_t)(data_pack[2] << 8 | data_pack[3]);
+    accel_pack->raz = (int16_t)(data_pack[4] << 8 | data_pack[5]);
 
     return ESP_OK;
 }

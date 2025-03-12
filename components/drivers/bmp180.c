@@ -96,6 +96,6 @@ int32_t bmp180_read(i2c_master_dev_handle_t dev_handle, bmp_colab_params_t colab
 
     float height = 44330 * (1 - pow(p / 101325.0f, 0.190263));
 
-    ESP_LOGI("BMP180", "temperature: %ld, pressure: %ld, height: %.10f", T, p, height);
+    // ESP_LOGI("BMP180", "temperature: %ld, pressure: %ld, height: %.10f", T, p, height);
     return hei;
 }

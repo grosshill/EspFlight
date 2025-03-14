@@ -18,7 +18,7 @@ set(HEAD_HASH)
 file(READ "E:/espidf_proj/EspFlight_cpp/build/CMakeFiles/git-data/HEAD" HEAD_CONTENTS LIMIT 1024)
 
 string(STRIP "${HEAD_CONTENTS}" HEAD_CONTENTS)
-set(GIT_DIR "E:/ESP-IDF/v5.4/esp-idf/.git")
+set(GIT_DIR "E:/espidf_proj/EspFlight_cpp/.git")
 # handle git-worktree
 if(EXISTS "${GIT_DIR}/commondir")
 	file(READ "${GIT_DIR}/commondir" GIT_DIR_NEW LIMIT 1024)

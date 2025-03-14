@@ -81,4 +81,6 @@ E:/espidf_proj/EspFlight_cpp/build/esp-idf/perfmon/libperfmon.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/rt/librt.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/spiffs/libspiffs.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/wifi_provisioning/libwifi_provisioning.a
+E:/espidf_proj/EspFlight_cpp/build/esp-idf/drivers/libdrivers.a
+E:/espidf_proj/EspFlight_cpp/build/esp-idf/espressif__esp-dsp/libespressif__esp-dsp.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/main/libmain.a

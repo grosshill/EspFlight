@@ -1,7 +1,7 @@
 #ifndef MPU6050_H
 #define MPU6050_H
 
-#include "drivers/drivers.h"
+#include "drivers.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -203,10 +203,6 @@ class MPU6050: public EF_I2C::EF_I2C_device
 
         void MPU6050_accel_range_setup(enum mpu6050_accel_setup setup);
         
-        void MPU6050_accel_hpf_setup(enum mpu6050_accel_hpf_setup setup);
-
-        void MPU6050_accel_read(mpu6050_accel_pack_t* accel_pack);
-
         void MPU6050_accel_hpf_setup(enum mpu6050_accel_hpf_setup setup);
 
         void MPU6050_accel_read(mpu6050_accel_pack_t* accel_pack);

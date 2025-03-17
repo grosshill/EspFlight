@@ -30,11 +30,30 @@ enum i2c_port_id {
 
 class EF_I2C_bus
 {
+    public:
+        static EF_I2C_bus& instance()
+        {
+            static EF_I2C_bus instance;
+            return instance;
+        }
+
+
+        EF_I2C_bus(const EF_I2C_bus&) = delete;
+        // EF_I2C_bus& operator=(const EF_I2C_bus&) = delete;
+        
+        i2c_master_bus_handle_t get_bus_handle()
+        {
+            return EF_I2C_bus_handle;
+        }
+        
+        static void initialize() {
+            instance();
+        }
+
     private:
-        static EF_I2C_bus* instance;
         i2c_master_bus_config_t EF_I2C_bus_config;
         i2c_master_bus_handle_t EF_I2C_bus_handle;
-        
+
         EF_I2C_bus()
         {
             EF_I2C_bus_config.clk_source = I2C_CLK_SRC_DEFAULT;
@@ -47,33 +66,18 @@ class EF_I2C_bus
             i2c_new_master_bus(&EF_I2C_bus_config, &EF_I2C_bus_handle);
         }
 
-        EF_I2C_bus(const EF_I2C_bus&) = delete;
-        EF_I2C_bus& operator=(const EF_I2C_bus&) = delete;
-    
-    public:
-        static EF_I2C_bus* get_instance() {
-            if (instance == nullptr) {
-                instance = new EF_I2C_bus();
-            }
-            return instance;
-        }
-
         ~EF_I2C_bus() {
             if (EF_I2C_bus_handle) {
                 i2c_del_master_bus(EF_I2C_bus_handle);
                 EF_I2C_bus_handle = NULL;
             }
         }
-
-        i2c_master_bus_handle_t get_bus_handle() const {
-            return EF_I2C_bus_handle;
-        }
 };
 
 class EF_I2C_device
 {
     public:
-        EF_I2C_device(const uint8_t dev_addr, EF_I2C_bus* i2c_bus);
+        EF_I2C_device(const uint8_t dev_addr);
         
         void EF_I2C_write(const uint8_t reg_addr, const uint8_t* data_word, const uint8_t data_length);
 

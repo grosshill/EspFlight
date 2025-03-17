@@ -845,3 +845,10 @@ E:/espidf_proj/EspFlight_cpp/build/esp-idf/main/CMakeFiles/list_install_componen
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/main/CMakeFiles/install.dir
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/main/CMakeFiles/install/local.dir
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/main/CMakeFiles/install/strip.dir
+E:/espidf_proj/EspFlight_cpp/build/esp-idf/sensors/CMakeFiles/__idf_sensors.dir
+E:/espidf_proj/EspFlight_cpp/build/esp-idf/sensors/CMakeFiles/edit_cache.dir
+E:/espidf_proj/EspFlight_cpp/build/esp-idf/sensors/CMakeFiles/rebuild_cache.dir
+E:/espidf_proj/EspFlight_cpp/build/esp-idf/sensors/CMakeFiles/list_install_components.dir
+E:/espidf_proj/EspFlight_cpp/build/esp-idf/sensors/CMakeFiles/install.dir
+E:/espidf_proj/EspFlight_cpp/build/esp-idf/sensors/CMakeFiles/install/local.dir
+E:/espidf_proj/EspFlight_cpp/build/esp-idf/sensors/CMakeFiles/install/strip.dir

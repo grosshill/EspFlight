@@ -1,11 +1,12 @@
 #include "drivers.h"
 
-EF_I2C::EF_I2C_device::EF_I2C_device(const uint8_t dev_addr, EF_I2C_bus* i2c_bus)
+EF_I2C::EF_I2C_device::EF_I2C_device(const uint8_t dev_addr)
 {
+    EF_I2C_bus::initialize();
     EF_I2C_device_config.dev_addr_length = I2C_ADDR_BIT_LEN_7;
     EF_I2C_device_config.device_address = dev_addr;
     EF_I2C_device_config.scl_speed_hz = I2C_CLK_FREQ;
-    EF_I2C_bus_dev = i2c_bus;
+    EF_I2C_bus_dev = &EF_I2C_bus::instance();
     i2c_master_bus_add_device(EF_I2C_bus_dev->get_bus_handle(), &EF_I2C_device_config, &EF_I2C_device_handle);
 }
 

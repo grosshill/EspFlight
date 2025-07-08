@@ -37,12 +37,12 @@ E:/espidf_proj/EspFlight_cpp/build/esp-idf/esp_driver_i2s/libesp_driver_i2s.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/sdmmc/libsdmmc.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/esp_driver_sdmmc/libesp_driver_sdmmc.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/esp_driver_sdspi/libesp_driver_sdspi.a
-E:/espidf_proj/EspFlight_cpp/build/esp-idf/esp_driver_sdio/libesp_driver_sdio.a
-E:/espidf_proj/EspFlight_cpp/build/esp-idf/esp_driver_dac/libesp_driver_dac.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/esp_driver_rmt/libesp_driver_rmt.a
+E:/espidf_proj/EspFlight_cpp/build/esp-idf/esp_driver_tsens/libesp_driver_tsens.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/esp_driver_sdm/libesp_driver_sdm.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/esp_driver_i2c/libesp_driver_i2c.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/esp_driver_ledc/libesp_driver_ledc.a
+E:/espidf_proj/EspFlight_cpp/build/esp-idf/esp_driver_usb_serial_jtag/libesp_driver_usb_serial_jtag.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/driver/libdriver.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/esp_phy/libesp_phy.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/esp_vfs_console/libesp_vfs_console.a
@@ -80,8 +80,11 @@ E:/espidf_proj/EspFlight_cpp/build/esp-idf/nvs_sec_provider/libnvs_sec_provider.
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/perfmon/libperfmon.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/rt/librt.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/spiffs/libspiffs.a
+E:/espidf_proj/EspFlight_cpp/build/esp-idf/touch_element/libtouch_element.a
+E:/espidf_proj/EspFlight_cpp/build/esp-idf/usb/libusb.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/wifi_provisioning/libwifi_provisioning.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/drivers/libdrivers.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/espressif__esp-dsp/libespressif__esp-dsp.a
-E:/espidf_proj/EspFlight_cpp/build/esp-idf/main/libmain.a
+E:/espidf_proj/EspFlight_cpp/build/esp-idf/algorithm/libalgorithm.a
 E:/espidf_proj/EspFlight_cpp/build/esp-idf/sensors/libsensors.a
+E:/espidf_proj/EspFlight_cpp/build/esp-idf/main/libmain.a

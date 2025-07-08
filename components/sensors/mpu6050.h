@@ -2,6 +2,7 @@
 #define MPU6050_H
 
 #include "drivers.h"
+#include "kalman.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -137,6 +138,17 @@ typedef struct {
     int16_t temp;
 } mpu6050_temp_pack_t;
 
+typedef struct {
+    float r;
+    float p;
+    float y;
+    float r_b;
+    float p_b;
+    float y_b;
+    float accel_x;
+    float accel_y;
+    float accel_z;
+} mpu6050_kalman_pack_t;
 
 enum mpu6050_device_setup {
     BW_260_D_0000_BW_256_D_0098_F_8 = 0,
@@ -190,8 +202,8 @@ enum mpu6050_temp_setup {
 class MPU6050: public EF_I2C::EF_I2C_device
 {
     public:
-        MPU6050(const uint8_t dev_addr, EF_I2C::EF_I2C_bus* i2c_bus);
-        ~MPU6050();
+        MPU6050(const uint8_t dev_addr);
+        ~MPU6050(){};
 
         void MPU6050_set_freq(uint16_t freq);
 
@@ -199,19 +211,25 @@ class MPU6050: public EF_I2C::EF_I2C_device
 
         void MPU6050_gyro_range_setup(enum mpu6050_gyro_setup setup);
 
-        void MPU6050_gyro_read(mpu6050_gyro_pack_t* gyro_pack);
+        mpu6050_gyro_pack_t MPU6050_gyro_read(void);
 
         void MPU6050_accel_range_setup(enum mpu6050_accel_setup setup);
         
         void MPU6050_accel_hpf_setup(enum mpu6050_accel_hpf_setup setup);
 
-        void MPU6050_accel_read(mpu6050_accel_pack_t* accel_pack);
+        mpu6050_accel_pack_t MPU6050_accel_read(void);
 
         void MPU6050_clk_setup(enum mpu6050_clk_setup setup);
 
         void MPU6050_temp_setup(enum mpu6050_temp_setup setup);
 
-        void MPU6050_temp_read(mpu6050_temp_pack_t* temp_pack);
+        mpu6050_temp_pack_t MPU6050_temp_read(void);
+
+        mpu6050_accel_pack_t accel_pack = {0, 0, 0};
+        mpu6050_gyro_pack_t gyro_pack = {0, 0, 0};
+        mpu6050_temp_pack_t temp_pack = {0};
+
+        void MPU6050_Kalman_Filter (void);
 };
 
 

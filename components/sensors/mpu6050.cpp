@@ -1,6 +1,8 @@
 #include "mpu6050.h"
+#include "esp_dsp.h"
 
-MPU6050::MPU6050(const uint8_t dev_addr, EF_I2C::EF_I2C_bus* i2c_bus): EF_I2C::EF_I2C_device(dev_addr)
+
+MPU6050::MPU6050(const uint8_t dev_addr): EF_I2C::EF_I2C_device(dev_addr)
 {
     uint8_t data;
     this->EF_I2C_read(MPU6050_PWR_MGMT_1, &data, 1);
@@ -110,4 +112,23 @@ mpu6050_temp_pack_t MPU6050::MPU6050_temp_read(void)
     this->EF_I2C_read(MPU6050_TEMP_OUT_H, data_pack, 2);
 
     this->temp_pack.temp = (data_pack[0] << 8) | data_pack[1];
+
+    return this->temp_pack;
+}
+
+mpu6050_gyro_pack_t MPU6050::MPU6050_gyro_read(void)
+{
+    uint8_t data_pack[6];
+    this->EF_I2C_read(MPU6050_ACCEL_XOUT_H, data_pack, 6);
+
+    this->gyro_pack.rgx = (data_pack[0] << 8) | data_pack[1];
+    this->gyro_pack.rgy = (data_pack[2] << 8) | data_pack[3];
+    this->gyro_pack.rgz = (data_pack[4] << 8) | data_pack[5];
+
+    return this->gyro_pack;
+}
+
+void MPU6050::MPU6050_Kalman_Filter(void)
+{
+    
 }

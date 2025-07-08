@@ -10,8 +10,8 @@
 namespace EF_I2C
 {
 
-#define I2C_INTERNAL_SCL GPIO_NUM_21
-#define I2C_INTERNAL_SDA GPIO_NUM_22
+#define I2C_INTERNAL_SCL GPIO_NUM_14
+#define I2C_INTERNAL_SDA GPIO_NUM_12
 #define I2C_TIMEOUT pdMS_TO_TICKS(100)
 #define I2C_CLK_FREQ 400000
 
@@ -79,9 +79,9 @@ class EF_I2C_device
     public:
         EF_I2C_device(const uint8_t dev_addr);
         
-        void EF_I2C_write(const uint8_t reg_addr, const uint8_t* data_word, const uint8_t data_length);
+        void EF_I2C_write(const uint8_t reg_addr, const uint8_t* data_word, const uint16_t data_length);
 
-        void EF_I2C_read(const uint8_t reg_addr, uint8_t *data, const uint8_t data_length);
+        void EF_I2C_read(const uint8_t reg_addr, uint8_t *data, const uint16_t data_length);
 
         i2c_master_dev_handle_t get_dev_handle() const {
             return EF_I2C_device_handle;

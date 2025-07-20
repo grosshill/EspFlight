@@ -1,4 +1,4 @@
-set(SRC_FILES pid.c kalman.c)
+set(SRC_FILES pid.c kalman.c quaternion.c)
 
 idf_component_register(
     SRCS ${SRC_FILES}

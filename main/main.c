@@ -1,16 +1,10 @@
-#include "driver/i2c_master.h"
 #include "driver/gpio.h"
-#include "esp_err.h"
-#include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include <string.h>
-#include <stdio.h>
 #include "i2c_manager.h"
-#include "mpu6050.h"
-#include "bmp180.h"
-#include "hmc5883l.h"
-#include "pid.h"
+#include "bmi270.h"
+
+#define DEBUG
 
 esp_err_t ret;
 
@@ -23,43 +17,32 @@ i2c_master_bus_config_t i2c_master_bus_config = {
     .flags.enable_internal_pullup = true
 };
 
-mpu6050_accel_pack_t mpu6050_accel_pack;
-mpu6050_gyro_pack_t mpu6050_gyro_pack;
-
 i2c_master_bus_handle_t i2c_bus_handle;
 
-void mpu6050_task(void* param);
-void bmp180_task(void* param);
+void bmi270_task(void* param);
+// void bmp180_task(void* param);
 
 void app_main(void)
 {   
-    i2c_device_config_t mpu6050_cfg = {
+    i2c_device_config_t bmi270_cfg = {
         .dev_addr_length = I2C_ADDR_BIT_LEN_7,
-        .device_address = MPU6050_DEVICE_L,
+        .device_address = BMI270_DEVICE,
         .scl_speed_hz = I2C_CLK_FREQ,
     };
 
-    i2c_device_config_t bmp180_cfg = {
-        .dev_addr_length = I2C_ADDR_BIT_LEN_7,
-        .device_address = BMP180_DEVICE,
-        .scl_speed_hz = I2C_CLK_FREQ,
-    };
+    i2c_master_dev_handle_t bmi270_handle;
 
-    i2c_master_dev_handle_t mpu6050_handle;
-    i2c_master_dev_handle_t bmp180_handle;
-
-    ret = i2c_new_master_bus(&i2c_master_bus_config, &i2c_bus_handle);
-    if (ret != ESP_OK) return;
+    EF_ERR_CHECK(i2c_new_master_bus(&i2c_master_bus_config, &i2c_bus_handle), "main");
     ESP_LOGI("EspFlight", "I2C bus created successfully");
 
-    i2c_master_bus_add_device(i2c_bus_handle, &bmp180_cfg, &bmp180_handle);
-    i2c_master_bus_add_device(i2c_bus_handle, &mpu6050_cfg, &mpu6050_handle);
+    // i2c_master_bus_add_device(i2c_bus_handle, &bmp180_cfg, &bmp180_handle);
+    EF_ERR_CHECK(i2c_master_bus_add_device(i2c_bus_handle, &bmi270_cfg, &bmi270_handle), "main");
 
-    mpu6050_init(mpu6050_handle);
+    // mpu6050_init(mpu6050_handle);
 
     vTaskDelay(pdMS_TO_TICKS(1000));
     
-    xTaskCreatePinnedToCore(mpu6050_task, "MPU6050", 10240, (void*)mpu6050_handle, 5, NULL, 0);
+    xTaskCreatePinnedToCore(bmi270_task, "BMI270", 10240, (void*)bmi270_handle, 5, NULL, 0);
     vTaskDelay(pdMS_TO_TICKS(100));
     // xTaskCreatePinnedToCore(bmp180_task, "BMP180", 10240, (void*)bmp180_handle, 5, NULL, 0);
 
@@ -67,42 +50,27 @@ void app_main(void)
 }
 
 
-void mpu6050_task(void* param)
+void bmi270_task(void* param)
 {
-    i2c_master_dev_handle_t mpu6050_handle = (i2c_master_dev_handle_t) param;
+    i2c_master_dev_handle_t bmi270_handle = (i2c_master_dev_handle_t) param;
     ESP_LOGI("LOG1" , "handle got!");
+    bmi270_init(bmi270_handle, bmi270_acc_range_8g, bmi270_gyro_range_2000);
     while(1)
     {
-        mpu6050_accel_read(mpu6050_handle, &mpu6050_accel_pack);
-        mpu6050_gyro_read(mpu6050_handle, &mpu6050_gyro_pack);
         
-        if (ret != ESP_OK) return;
-        vTaskDelay(pdMS_TO_TICKS(.0001));
-
-        float ax = (float)mpu6050_accel_pack.rax / 4096.0;
-        float ay = (float)mpu6050_accel_pack.ray / 4096.0;
-        float az = (float)mpu6050_accel_pack.raz / 4096.0;
-
-        float r = (float)mpu6050_gyro_pack.rgx / 32.75;
-        float p = (float)mpu6050_gyro_pack.rgy / 32.75;
-        float y = (float)mpu6050_gyro_pack.rgz / 32.75;
-        // ESP_LOGI("MPU6050", "%d%d%d", mpu6050_accel_pack.rax, mpu6050_accel_pack.ray, mpu6050_accel_pack.raz);
-        ESP_LOGI("MPU6050", "");
-        ESP_LOGI("MPU6050", "ax: %.4fg ay: %.4fg az: %.4fg", ax, ay, az);
-        ESP_LOGI("MPU6050", "r: %.4fd/s p: %.4fd/s y: %.4fd/s", r, p, y);
     }
 }
 
 
-void bmp180_task(void* param)
-{
-    i2c_master_dev_handle_t bmp180_handle = (i2c_master_dev_handle_t) param;
-    bmp_colab_params_t colab = bmp180_init(bmp180_handle);
-    ESP_LOGI("LOG2", "handle got!");
-    while(1)
-    {
-        bmp180_read(bmp180_handle, colab);
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
+// void bmp180_task(void* param)
+// {
+//     i2c_master_dev_handle_t bmp180_handle = (i2c_master_dev_handle_t) param;
+//     bmp_colab_params_t colab = bmp180_init(bmp180_handle);
+//     ESP_LOGI("LOG2", "handle got!");
+//     while(1)
+//     {
+//         bmp180_read(bmp180_handle, colab);
+//         vTaskDelay(pdMS_TO_TICKS(10));
+//     }
 
-}
+// }

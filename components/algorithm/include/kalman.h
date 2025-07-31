@@ -11,7 +11,6 @@ typedef struct
     double R_measure;
     double angle;
     double bias;
-    dspm::Mat P(2, 2);
 } kalman_t;
 
 

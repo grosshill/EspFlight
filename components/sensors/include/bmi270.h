@@ -3,6 +3,7 @@
 #include "i2c_manager.h"
 #include "kalman.h"
 
+#define BMI270_CHIP_ID 0x00
 #define BMI270_DEVICE 0x68
 #define BMI270_PWR_CONF 0x7C
 #define BMI270_PWR_CTRL 0x7D
@@ -55,7 +56,7 @@ esp_err_t bmi270_read_gyro(i2c_master_dev_handle_t dev_handle, bmi270_gyro_pack_
 
 esp_err_t bmi270_read_acc(i2c_master_dev_handle_t dev_handle, bmi270_acc_pack_t* acc_pack);
 
-esp_err_t bmi270_read_temp(i2c_master_dev_handle_t dev_handle, bmi270_temp_pack_t* temp_pack);
+// esp_err_t bmi270_read_temp(i2c_master_dev_handle_t dev_handle, bmi270_temp_pack_t* temp_pack);
 
-esp_err_t bmi270_get_pose();
+// esp_err_t bmi270_get_pose();
 #endif

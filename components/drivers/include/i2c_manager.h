@@ -11,7 +11,15 @@
 #define I2C_EXTERNAL_SCL GPIO_NUM_2
 #define I2C_EXTERNAL_SDA GPIO_NUM_3
 
-#define I2C_TIMEOUT pdMS_TO_TICKS(100)  // 100ms timeout
+/*
+  According to the doc of ESP-IDF, the default value of this time_out is 100ms.
+  However, for some devices, for example the bmi270 gyro, we need to burst write a
+  config file with length 8192 bytes, which takes about 185ms for a I2C bus with
+  clock frequency 400kHz, this will cause seriout problem. So we recommend to set
+  this time_out value up to at least 400ms, this won't influence performance.
+*/
+
+#define I2C_TIMEOUT pdMS_TO_TICKS(400)
 #define I2C_CLK_FREQ 400000
 #define I2C_TAG "I2C"
 enum i2c_port_id {

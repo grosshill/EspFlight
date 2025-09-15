@@ -1,7 +1,6 @@
 #include "i2c_manager.h"
 #include "string.h"
 
-#define I2C_TIMEOUT pdMS_TO_TICKS(100)
 
 
 esp_err_t i2c_write(i2c_master_dev_handle_t dev_handle, const uint8_t reg_addr, const uint8_t* data_word, const uint16_t data_length)

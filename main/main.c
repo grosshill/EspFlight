@@ -56,9 +56,9 @@ void bmi270_task(void* param)
 {
     i2c_master_dev_handle_t bmi270_handle = (i2c_master_dev_handle_t) param;
     ESP_LOGI("LOG1" , "handle got!");
-    bmi270_acc_pack_t acc_pack;
-    bmi270_gyro_pack_t gyro_pack;
-    bmi270_temp_pack_t temp_pack;
+    acc_pack_t acc_pack;
+    gyro_pack_t gyro_pack;
+    temp_pack_t temp_pack;
     bmi270_init(bmi270_handle, bmi270_acc_range_8g, bmi270_gyro_range_2000);
     while(1)
     {

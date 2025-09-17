@@ -76,7 +76,7 @@ esp_err_t bmi270_init(i2c_master_dev_handle_t dev_handle, enum bmi270_acc_range 
 //     k_filter.Kalman_init(kx, ky);
 // }
 
-esp_err_t bmi270_read_gyro(i2c_master_dev_handle_t dev_handle, bmi270_gyro_pack_t* gyro_pack, enum bmi270_gyro_range gyro_range)
+esp_err_t bmi270_read_gyro(i2c_master_dev_handle_t dev_handle, gyro_pack_t* gyro_pack, enum bmi270_gyro_range gyro_range)
 {
     uint8_t data[6];
     EF_ERR_CHECK(i2c_read(dev_handle, BMI270_GYRO_START, data, 6), BMI270_TAG);
@@ -97,7 +97,7 @@ esp_err_t bmi270_read_gyro(i2c_master_dev_handle_t dev_handle, bmi270_gyro_pack_
     return ESP_OK;
 }
 
-esp_err_t bmi270_read_acc(i2c_master_dev_handle_t dev_handle, bmi270_acc_pack_t* acc_pack, enum bmi270_acc_range acc_range)
+esp_err_t bmi270_read_acc(i2c_master_dev_handle_t dev_handle, acc_pack_t* acc_pack, enum bmi270_acc_range acc_range)
 {
     uint8_t data[6];
     EF_ERR_CHECK(i2c_read(dev_handle, BMI270_ACC_START, data, 6), BMI270_TAG);
@@ -118,7 +118,7 @@ esp_err_t bmi270_read_acc(i2c_master_dev_handle_t dev_handle, bmi270_acc_pack_t*
     return ESP_OK;
 }
 
-esp_err_t bmi270_read_temp(i2c_master_dev_handle_t dev_handle, bmi270_temp_pack_t* temp_pack)
+esp_err_t bmi270_read_temp(i2c_master_dev_handle_t dev_handle, temp_pack_t* temp_pack)
 {
     uint8_t data[2];
     EF_ERR_CHECK(i2c_read(dev_handle, BMI270_TEMP_START, data, 2), BMI270_TAG);

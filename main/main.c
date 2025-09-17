@@ -1,4 +1,5 @@
 #include "driver/gpio.h"
+#include "quaternion_utils.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "i2c_manager.h"
@@ -24,15 +25,13 @@ void bmi270_task(void* param);
 
 void app_main(void)
 {   
-    // 在app_main开始时启用详细日志
-    esp_log_level_set("i2c", ESP_LOG_VERBOSE);
-    esp_log_level_set("sensor", ESP_LOG_DEBUG);
     i2c_device_config_t bmi270_cfg = {
         .dev_addr_length = I2C_ADDR_BIT_LEN_7,
         .device_address = BMI270_DEVICE,
         .scl_speed_hz = I2C_CLK_FREQ,
     };
-
+    quat_t my_quat = quat();
+    quat_t my_quat2 = quat_wxyz(1, 0, 0 ,0);
     i2c_master_dev_handle_t bmi270_handle;
 
     EF_ERR_CHECK(i2c_new_master_bus(&i2c_master_bus_config, &i2c_bus_handle), "main");
@@ -59,14 +58,16 @@ void bmi270_task(void* param)
     ESP_LOGI("LOG1" , "handle got!");
     bmi270_acc_pack_t acc_pack;
     bmi270_gyro_pack_t gyro_pack;
+    bmi270_temp_pack_t temp_pack;
     bmi270_init(bmi270_handle, bmi270_acc_range_8g, bmi270_gyro_range_2000);
     while(1)
     {
         vTaskDelay(pdMS_TO_TICKS(100));
-        bmi270_read_acc(bmi270_handle, &acc_pack);
-        bmi270_read_gyro(bmi270_handle, &gyro_pack);
-        // ESP_LOGI("BMI270", "rax: %d, ray: %d, raz: %d", acc_pack.rax, acc_pack.ray, acc_pack.raz);
-        // ESP_LOGI("BMI270", "rgx: %d, rgy: %d, rgz: %d", gyro_pack.rgx, gyro_pack.rgy, gyro_pack.rgz);
+        bmi270_read_acc(bmi270_handle, &acc_pack, bmi270_acc_range_8g);
+        bmi270_read_gyro(bmi270_handle, &gyro_pack, bmi270_gyro_range_2000);
+        bmi270_read_temp(bmi270_handle, &temp_pack);
+        ESP_LOGI("BMI270", "ax: %.2f, ay: %.2f, az: %.2f", acc_pack.ax, acc_pack.ay, acc_pack.az);
+        ESP_LOGI("BMI270", "gx: %.2f, gy: %.2f, gz: %.2f", gyro_pack.gx, gyro_pack.gy, gyro_pack.gz);
     }
 }
 

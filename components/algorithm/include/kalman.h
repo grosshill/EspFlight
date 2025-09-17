@@ -1,8 +1,8 @@
-#ifndef KALMAN_H
-#define KALMAN_H
+#pragma once
 
-#include "esp_dsp.h"
 #include "freertos/FreeRTOS.h"
+// #include "esp_timer.h"
+
 
 typedef struct
 {
@@ -11,7 +11,13 @@ typedef struct
     double R_measure;
     double angle;
     double bias;
+    double P_00;
+    double P_11;
+    double P_01;
 } kalman_t;
 
-
-#endif
+typedef struct
+{
+    double est_gx;
+    double est_gy;
+} kalman_est_angle_t;

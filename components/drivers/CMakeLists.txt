@@ -1,5 +1,6 @@
 set(SRC_FILES 
     i2c_manager.c
+    time_manager.c
     )
 
 idf_component_register(
@@ -8,4 +9,5 @@ idf_component_register(
     REQUIRES driver
     REQUIRES algorithm
     REQUIRES utils
+    REQUIRES esp_timer
 )

@@ -1,7 +1,8 @@
 #ifndef BMI270_H
 #define BMI270_H
 #include "i2c_manager.h"
-#include "sensor_data_type.h"
+#include "mahony.h"
+#include "sensor_data_types.h"
 
 #define BMI270_CHIP_ID 0x00
 #define BMI270_DEVICE 0x68
@@ -43,5 +44,5 @@ esp_err_t bmi270_read_acc(i2c_master_dev_handle_t dev_handle, acc_pack_t* acc_pa
 
 esp_err_t bmi270_read_temp(i2c_master_dev_handle_t dev_handle, temp_pack_t* temp_pack);
 
-// esp_err_t bmi270_get_pose(bmi270_gyro_pack_t gyro_pack, bmi270_acc_pack_t acc_pack, kalman_t* kalman, kalman_est_angle_t* est_angle);
+void bmi270_get_pose(gyro_pack_t gyro_pack, acc_pack_t acc_pack, mahony_params_t* params, atti_pack_t* attitude);
 #endif

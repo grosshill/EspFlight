@@ -13,5 +13,17 @@ typedef struct {
 } gyro_pack_t;
 
 typedef struct {
+    float mx;
+    float my;
+    float mz;
+} mag_pack_t;
+
+typedef struct {
+    float roll;
+    float pitch;
+    float yaw;
+} atti_pack_t;
+
+typedef struct {
     float temp;
 } temp_pack_t;

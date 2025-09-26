@@ -9,4 +9,5 @@ idf_component_register(
     INCLUDE_DIRS "include"
     REQUIRES drivers
     REQUIRES algorithm
+    REQUIRES utils
 )

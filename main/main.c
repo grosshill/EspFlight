@@ -4,6 +4,9 @@
 #include "freertos/task.h"
 #include "i2c_manager.h"
 #include "bmi270.h"
+#include "mahony.h"
+#include "sensor_data_types.h"
+#include "time_manager.h"
 
 #define DEBUG
 
@@ -30,8 +33,6 @@ void app_main(void)
         .device_address = BMI270_DEVICE,
         .scl_speed_hz = I2C_CLK_FREQ,
     };
-    quat_t my_quat = quat();
-    quat_t my_quat2 = quat_wxyz(1, 0, 0 ,0);
     i2c_master_dev_handle_t bmi270_handle;
 
     EF_ERR_CHECK(i2c_new_master_bus(&i2c_master_bus_config, &i2c_bus_handle), "main");
@@ -59,15 +60,28 @@ void bmi270_task(void* param)
     acc_pack_t acc_pack;
     gyro_pack_t gyro_pack;
     temp_pack_t temp_pack;
+    atti_pack_t atti_pack;
+    int64_t timer;
+    float dt;
+    quat_t init_quat = quat_wxyz(.0, .707, 0.707 ,0);
+    mahony_params_t mahony_params = {
+        .Kp = 0,
+        // .Ki = 1e-6,
+        .rotation = init_quat,
+    };
     bmi270_init(bmi270_handle, bmi270_acc_range_8g, bmi270_gyro_range_2000);
+    timer = esp_timer_get_time();
     while(1)
     {
-        vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(2)); /* 500 hz*/
         bmi270_read_acc(bmi270_handle, &acc_pack, bmi270_acc_range_8g);
         bmi270_read_gyro(bmi270_handle, &gyro_pack, bmi270_gyro_range_2000);
         bmi270_read_temp(bmi270_handle, &temp_pack);
         ESP_LOGI("BMI270", "ax: %.2f, ay: %.2f, az: %.2f", acc_pack.ax, acc_pack.ay, acc_pack.az);
         ESP_LOGI("BMI270", "gx: %.2f, gy: %.2f, gz: %.2f", gyro_pack.gx, gyro_pack.gy, gyro_pack.gz);
+        dt = dt_s(&timer);
+        mahony_get_deg(acc_pack, gyro_pack, &mahony_params, &atti_pack, dt);
+        // ESP_LOGI("BMI270", "roll: %.2f°, pitch: %.2f°, yaw: %.2f°", atti_pack.roll, atti_pack.pitch, atti_pack.yaw);
     }
 }
 

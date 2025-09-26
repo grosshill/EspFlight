@@ -4,4 +4,8 @@ idf_component_register(SRCS "main.c"
                        REQUIRES algorithm
                        REQUIRES drivers
                        REQUIRES sensors
+                       REQUIRES utils
+                       REQUIRES external
+                       
                        )
+                       

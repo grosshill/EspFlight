@@ -32,6 +32,7 @@ esp_err_t bmp280_init(i2c_master_dev_handle_t dev_handle, bmp_colab_params_t* pa
     return ESP_OK;
 }
 
+/* called automatically by function bmp280_init */
 esp_err_t bmp280_get_colab_params(i2c_master_dev_handle_t dev_handle, bmp_colab_params_t* params)
 {
     uint8_t data[24];
@@ -61,8 +62,9 @@ esp_err_t bmp280_read_temp(i2c_master_dev_handle_t dev_handle, baro_pack_t* baro
 {
     uint8_t data[3];
     EF_ERR_CHECK(i2c_read(dev_handle, BMP280_TEMP_REG, data, 3), BMP280_TAG);
+    ESP_LOGI("BMP280", "row temp %d, %d, %d", data[0], data[1], data[2]);
     baro_pack->temp = (int32_t)(data[0] << 12 | data[1] << 4 | (data[2] >> 4 & 0x0F));
-
+    ESP_LOGI("BMP280", "row temp %ld", baro_pack->temp);
     /*
       This colabration formula is from the datasheet of BMP280, section 3.11.3
     */
@@ -73,7 +75,8 @@ esp_err_t bmp280_read_temp(i2c_master_dev_handle_t dev_handle, baro_pack_t* baro
             * (int32_t)(params->T3)) >> 14;
     baro_pack->t_fine = var1 + var2;
     baro_pack->temp = (baro_pack->t_fine * 5 + 128) >> 8;
-
+    ESP_LOGI("BMP280", "calculated temp %ld", baro_pack->temp);
+    ESP_LOGI("BMP280", "t_fine %ld", baro_pack->t_fine);
     /*
       Here temp value is in ℃ / 100, which means we need to devide it by 100 to get the value in ℃.
     */
@@ -115,7 +118,7 @@ esp_err_t bmp280_read_press(i2c_master_dev_handle_t dev_handle, baro_pack_t* bar
     return ESP_OK;
 }
 
-float bmp280_get_height(i2c_master_bus_handle_t dev_handle, const baro_pack_t* baro_pack)
+float bmp280_get_height(const baro_pack_t* baro_pack)
 {
     // float temp = bmp280_read_temp() / 100.0f;
     // float press = bmp280_read_press() / 256.0f / 100.0f;

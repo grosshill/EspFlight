@@ -4,6 +4,7 @@
 #include "freertos/task.h"
 #include "i2c_manager.h"
 #include "bmi270.h"
+#include "bmp280.h"
 #include "mahony.h"
 #include "sensor_data_types.h"
 #include "time_manager.h"
@@ -24,7 +25,7 @@ i2c_master_bus_config_t i2c_master_bus_config = {
 i2c_master_bus_handle_t i2c_bus_handle;
 
 void bmi270_task(void* param);
-// void bmp180_task(void* param);
+void bmp280_task(void* param);
 
 void app_main(void)
 {   
@@ -35,17 +36,25 @@ void app_main(void)
     };
     i2c_master_dev_handle_t bmi270_handle;
 
+    i2c_device_config_t bmp280_cfg = {
+        .dev_addr_length = I2C_ADDR_BIT_LEN_7,
+        .device_address = BMI270_DEVICE,
+        .scl_speed_hz = I2C_CLK_FREQ,
+    };
+    i2c_master_dev_handle_t bmp280_handle;
+
     EF_ERR_CHECK(i2c_new_master_bus(&i2c_master_bus_config, &i2c_bus_handle), "main");
     ESP_LOGI("EspFlight", "I2C bus created successfully");
 
     // i2c_master_bus_add_device(i2c_bus_handle, &bmp180_cfg, &bmp180_handle);
     EF_ERR_CHECK(i2c_master_bus_add_device(i2c_bus_handle, &bmi270_cfg, &bmi270_handle), "main");
-
+    EF_ERR_CHECK(i2c_master_bus_add_device(i2c_bus_handle, &bmp280_cfg, &bmp280_handle), "main");
     // mpu6050_init(mpu6050_handle);
 
     vTaskDelay(pdMS_TO_TICKS(1000));
     
-    xTaskCreatePinnedToCore(bmi270_task, "BMI270", 10240, (void*)bmi270_handle, 5, NULL, 0);
+    xTaskCreatePinnedToCore(bmi270_task, "BMI270", 10240, (void*)bmi270_handle, 4, NULL, 0);
+    xTaskCreatePinnedToCore(bmp280_task, "BMI280", 10240, (void*)bmp280_handle, 5, NULL, 0);
     vTaskDelay(pdMS_TO_TICKS(100));
     // xTaskCreatePinnedToCore(bmp180_task, "BMP180", 10240, (void*)bmp180_handle, 5, NULL, 0);
 
@@ -63,10 +72,10 @@ void bmi270_task(void* param)
     atti_pack_t atti_pack;
     int64_t timer;
     float dt;
-    quat_t init_quat = quat_wxyz(.0, .707, 0.707 ,0);
+    quat_t init_quat = quat_wxyz(1.f, .0f, .0f , .0f);
     mahony_params_t mahony_params = {
-        .Kp = 1.,
-        .Ki = 1e-3,
+        .Kp = 1.f,
+        .Ki = 1e-3f,
         .rotation = init_quat,
     };
     bmi270_init(bmi270_handle, bmi270_acc_range_8g, bmi270_gyro_range_2000);
@@ -81,20 +90,30 @@ void bmi270_task(void* param)
         // ESP_LOGI("BMI270", "gx: %.2f, gy: %.2f, gz: %.2f", gyro_pack.gx, gyro_pack.gy, gyro_pack.gz);
         dt = dt_s(&timer);
         mahony_get_deg(acc_pack, gyro_pack, &mahony_params, &atti_pack, dt);
-        ESP_LOGI("BMI270", "roll: %.2f°, pitch: %.2f°, yaw: %.2f°", atti_pack.roll, atti_pack.pitch, atti_pack.yaw);
+        // ESP_LOGI("BMI270", "roll: %.2f°, pitch: %.2f°, yaw: %.2f°", atti_pack.roll, atti_pack.pitch, atti_pack.yaw);
     }
 }
 
 
-// void bmp180_task(void* param)
-// {
-//     i2c_master_dev_handle_t bmp180_handle = (i2c_master_dev_handle_t) param;
-//     bmp_colab_params_t colab = bmp180_init(bmp180_handle);
-//     ESP_LOGI("LOG2", "handle got!");
-//     while(1)
-//     {
-//         bmp180_read(bmp180_handle, colab);
-//         vTaskDelay(pdMS_TO_TICKS(10));
-//     }
+void bmp280_task(void* param)
+{
+    i2c_master_dev_handle_t bmp280_handle = (i2c_master_dev_handle_t) param;
+    bmp_colab_params_t colab_params;
+    baro_pack_t baro_pack;
+    bmp280_init(bmp280_handle, &colab_params);
+    float height;
+    while(1)
+    {   
+        // printf("asd"); 
+        bmp280_read_temp(bmp280_handle, &baro_pack, &colab_params);
+        vTaskDelay(pdMS_TO_TICKS(10));
+        // printf("xcv");
+        bmp280_read_press(bmp280_handle, &baro_pack, &colab_params);
+        vTaskDelay(pdMS_TO_TICKS(10));
+        // printf("vbn");
+        height = bmp280_get_height(&baro_pack);
+        ESP_LOGI("BMP280", "height: %.2fm, temperature: %.2f℃", height, baro_pack.temp / 100.0f);
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
 
-// }
+}

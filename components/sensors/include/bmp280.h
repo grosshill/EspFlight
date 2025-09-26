@@ -80,4 +80,4 @@ esp_err_t bmp280_read_temp(i2c_master_dev_handle_t dev_handle, baro_pack_t* baro
 
 esp_err_t bmp280_read_press(i2c_master_dev_handle_t dev_handle, baro_pack_t* baro_pack, const bmp_colab_params_t* params);
 
-float bmp280_get_height(i2c_master_bus_handle_t dev_handle, const baro_pack_t* baro_pack);
+float bmp280_get_height(const baro_pack_t* baro_pack);

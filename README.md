@@ -4,8 +4,8 @@ Light weighted integrate flight control based on ESP-IDF and ESP32-S3.
 Skeleton:
 | 外设需求 | 优先级 | 实现 | 备注 |
 |:-----|:-----|:-----|:-----|
-| 陀螺仪/加速度计驱动 | 必需   | 已实现 | MPU6050 |
-| 气压计驱动 | 必需   | 已实现 | BMP180 |
+| 陀螺仪/加速度计驱动 | 必需   | 已实现 | BMI270 |
+| 气压计驱动 | 必需   | 已实现 | BMP280 |
 | PWM电调驱动 | 必需  | 未实现| |
 | Dshot电调驱动 | 可选   | 未实现 ||
 | 磁罗盘/GPS驱动 | 必需   | 未实现 ||

@@ -65,8 +65,8 @@ void bmi270_task(void* param)
     float dt;
     quat_t init_quat = quat_wxyz(.0, .707, 0.707 ,0);
     mahony_params_t mahony_params = {
-        .Kp = 0,
-        // .Ki = 1e-6,
+        .Kp = 1.,
+        .Ki = 1e-3,
         .rotation = init_quat,
     };
     bmi270_init(bmi270_handle, bmi270_acc_range_8g, bmi270_gyro_range_2000);
@@ -77,11 +77,11 @@ void bmi270_task(void* param)
         bmi270_read_acc(bmi270_handle, &acc_pack, bmi270_acc_range_8g);
         bmi270_read_gyro(bmi270_handle, &gyro_pack, bmi270_gyro_range_2000);
         bmi270_read_temp(bmi270_handle, &temp_pack);
-        ESP_LOGI("BMI270", "ax: %.2f, ay: %.2f, az: %.2f", acc_pack.ax, acc_pack.ay, acc_pack.az);
-        ESP_LOGI("BMI270", "gx: %.2f, gy: %.2f, gz: %.2f", gyro_pack.gx, gyro_pack.gy, gyro_pack.gz);
+        // ESP_LOGI("BMI270", "ax: %.2f, ay: %.2f, az: %.2f", acc_pack.ax, acc_pack.ay, acc_pack.az);
+        // ESP_LOGI("BMI270", "gx: %.2f, gy: %.2f, gz: %.2f", gyro_pack.gx, gyro_pack.gy, gyro_pack.gz);
         dt = dt_s(&timer);
         mahony_get_deg(acc_pack, gyro_pack, &mahony_params, &atti_pack, dt);
-        // ESP_LOGI("BMI270", "roll: %.2f°, pitch: %.2f°, yaw: %.2f°", atti_pack.roll, atti_pack.pitch, atti_pack.yaw);
+        ESP_LOGI("BMI270", "roll: %.2f°, pitch: %.2f°, yaw: %.2f°", atti_pack.roll, atti_pack.pitch, atti_pack.yaw);
     }
 }
 

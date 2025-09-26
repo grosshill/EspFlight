@@ -5,6 +5,7 @@
 #include "freertos/task.h"
 #include "driver/i2c_master.h"
 #include "debug_utils.h"
+#include "esp_err.h"
 
 #define I2C_INTERNAL_SCL GPIO_NUM_12
 #define I2C_INTERNAL_SDA GPIO_NUM_14

@@ -3,6 +3,10 @@
 #include "i2c_manager.h"
 #include "mahony.h"
 #include "sensor_data_types.h"
+#include "debug_utils.h"
+#include "esp_err.h"
+#include "esp_log.h"
+#include "bmi270_config.h"
 
 #define BMI270_CHIP_ID 0x00
 #define BMI270_DEVICE 0x68

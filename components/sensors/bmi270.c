@@ -1,9 +1,4 @@
 #include "bmi270.h"
-#include "bmi270_config.h"
-#include "debug_utils.h"
-#include "esp_log.h"
-#include "esp_err.h"
-
 
 const float bmi270_gyro_trans[5] = {16.4, 32.8, 65.6, 131.2, 262.4};
 const float bmi270_acc_trans[4] = {16383.5, 8191.8, 4095.9, 2047.9};

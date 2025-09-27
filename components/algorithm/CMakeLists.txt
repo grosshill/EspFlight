@@ -5,4 +5,5 @@ idf_component_register(
     INCLUDE_DIRS "include"
     REQUIRES esp-dsp
     REQUIRES utils
+    REQUIRES sensors
 )

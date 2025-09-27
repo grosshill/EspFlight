@@ -1,16 +1,13 @@
-set(SRC_FILES 
-    i2c_manager.c
-    time_manager.c
-    pwm_manager.c
-    dshot_manager.c
+set(SRC_FILES
+    bldc.c
+    motor_pwm.c
     )
 
 idf_component_register(
     SRCS ${SRC_FILES}
     INCLUDE_DIRS "include"
-    REQUIRES driver
+    REQUIRES drivers
     REQUIRES algorithm
     REQUIRES utils
-    REQUIRES esp_timer
     REQUIRES esp_driver_ledc
 )

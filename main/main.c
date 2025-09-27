@@ -8,6 +8,7 @@
 #include "mahony.h"
 #include "sensor_data_types.h"
 #include "time_manager.h"
+#include "motor_pwm.h"
 
 #define DEBUG
 
@@ -26,37 +27,47 @@ i2c_master_bus_handle_t i2c_bus_handle;
 
 void bmi270_task(void* param);
 void bmp280_task(void* param);
+void pwm_motor_test_task(void* param);
 
 void app_main(void)
 {   
-    i2c_device_config_t bmi270_cfg = {
-        .dev_addr_length = I2C_ADDR_BIT_LEN_7,
-        .device_address = BMI270_DEVICE,
-        .scl_speed_hz = I2C_CLK_FREQ,
-    };
-    i2c_master_dev_handle_t bmi270_handle;
+    // i2c_device_config_t bmi270_cfg = {
+    //     .dev_addr_length = I2C_ADDR_BIT_LEN_7,
+    //     .device_address = BMI270_DEVICE,
+    //     .scl_speed_hz = I2C_CLK_FREQ,
+    // };
+    // i2c_master_dev_handle_t bmi270_handle;
 
-    i2c_device_config_t bmp280_cfg = {
-        .dev_addr_length = I2C_ADDR_BIT_LEN_7,
-        .device_address = BMI270_DEVICE,
-        .scl_speed_hz = I2C_CLK_FREQ,
+    // i2c_device_config_t bmp280_cfg = {
+    //     .dev_addr_length = I2C_ADDR_BIT_LEN_7,
+    //     .device_address = BMI270_DEVICE,
+    //     .scl_speed_hz = I2C_CLK_FREQ,
+    // };
+    // i2c_master_dev_handle_t bmp280_handle;
+
+    ledc_timer_config_t pwm_motor_timer_cfg = {
+        .speed_mode = PWM_SPEED_MODE,
+        .duty_resolution = PWM_DUTY_RES,
+        .timer_num = PWM_TIMER,
+        .freq_hz = PWM_FREQUENCY,
+        .clk_cfg = PWM_AUTO_CLK
     };
-    i2c_master_dev_handle_t bmp280_handle;
+
+    pwm_motor_setup(&pwm_motor_timer_cfg, MOTOR_2);
 
     EF_ERR_CHECK(i2c_new_master_bus(&i2c_master_bus_config, &i2c_bus_handle), "main");
     ESP_LOGI("EspFlight", "I2C bus created successfully");
 
     // i2c_master_bus_add_device(i2c_bus_handle, &bmp180_cfg, &bmp180_handle);
-    EF_ERR_CHECK(i2c_master_bus_add_device(i2c_bus_handle, &bmi270_cfg, &bmi270_handle), "main");
-    EF_ERR_CHECK(i2c_master_bus_add_device(i2c_bus_handle, &bmp280_cfg, &bmp280_handle), "main");
-    // mpu6050_init(mpu6050_handle);
-
+    // EF_ERR_CHECK(i2c_master_bus_add_device(i2c_bus_handle, &bmi270_cfg, &bmi270_handle), "main");
+    // EF_ERR_CHECK(i2c_master_bus_add_device(i2c_bus_handle, &bmp280_cfg, &bmp280_handle), "main");
+    
     vTaskDelay(pdMS_TO_TICKS(1000));
     
-    xTaskCreatePinnedToCore(bmi270_task, "BMI270", 10240, (void*)bmi270_handle, 4, NULL, 0);
-    xTaskCreatePinnedToCore(bmp280_task, "BMI280", 10240, (void*)bmp280_handle, 5, NULL, 0);
+    // xTaskCreatePinnedToCore(bmi270_task, "BMI270", 10240, (void*)bmi270_handle, 4, NULL, 0);
+    // xTaskCreatePinnedToCore(bmp280_task, "BMI280", 10240, (void*)bmp280_handle, 5, NULL, 0);
+    xTaskCreatePinnedToCore(pwm_motor_test_task, "PWM", 4096, NULL, 5, NULL, 1);
     vTaskDelay(pdMS_TO_TICKS(100));
-    // xTaskCreatePinnedToCore(bmp180_task, "BMP180", 10240, (void*)bmp180_handle, 5, NULL, 0);
 
     ESP_LOGI("EspFlight", "Initialize I2C");
 }
@@ -116,4 +127,20 @@ void bmp280_task(void* param)
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 
+}
+
+void pwm_motor_test_task(void* param)
+{
+    uint16_t value = 1000;
+    int8_t step = 1;
+    while(1)
+    {
+        value += step;
+
+        if(value >= 2000) step = -1;
+        else if(value <= 1000) step = 1;
+        ESP_LOGI("PWM", "Current high in ms: %.2f", (value - 1000) / 500.0 + 0.5);
+        pwm_throttle_set(MOTOR_ID_1, value);
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
 }

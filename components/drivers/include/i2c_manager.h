@@ -21,7 +21,7 @@
 */
 
 #define I2C_TIMEOUT pdMS_TO_TICKS(400)
-#define I2C_CLK_FREQ 400000
+#define I2C_CLK_FREQ (400000)
 #define I2C_TAG "I2C"
 enum i2c_port_id {
     i2c_internal_port = 0,

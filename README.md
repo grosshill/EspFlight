@@ -45,3 +45,9 @@ EspFlight/
 │── sdkconfig
 
 ```
+
+## TODO
+Low pass FIR filter for ddx, ddy, ddz (ax, ay, az)
+Low pass IIR filter for droll 
+Kalman filter for postion and velocity
+Cascade PID controller for postion, velocity and motor

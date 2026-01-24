@@ -8,8 +8,8 @@ extern "C" {
 /* opaque handle of quaternions */
 typedef struct quat_handle* quat_t;
 
-/* create a unit quaternion, i.e. {1, 0, 0, 0} */
-quat_t quat(void);
+/* create a quaternion from array in wxyz */
+quat_t quat_arr(const float arr[4]);
 
 /* create a quaternion from given parameters */
 quat_t quat_wxyz(float w, float x, float y, float z);

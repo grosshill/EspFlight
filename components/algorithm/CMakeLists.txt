@@ -6,4 +6,5 @@ idf_component_register(
     REQUIRES esp-dsp
     REQUIRES utils
     REQUIRES sensors
+    REQUIRES external
 )

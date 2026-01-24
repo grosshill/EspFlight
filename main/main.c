@@ -85,7 +85,7 @@ void bmi270_task(void* param)
     atti_pack_t atti_pack;
     int64_t timer;
     float dt;
-    quat_t init_quat = quat_wxyz(1.f, .0f, .0f , .0f);
+    quat_t init_quat = quat_wxyz(.5f, .5f, .5f , .5f);
     mahony_params_t mahony_params = {
         .Kp = 1.f,
         .Ki = 1e-3f,

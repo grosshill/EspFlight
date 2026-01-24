@@ -1,31 +1,19 @@
+#include "eigen_types.hpp"
 #include "quaternion_utils.h"
-#include <Eigen/Geometry>
-
-struct quat_handle {
-    Eigen::Quaternionf quat;
-};
+#include "matrix_utils.h"
 
 extern "C" {
 
-quat_t quat(void)
+quat_t quat_arr(const float arr[4])
 {
-    quat_t ret = new quat_handle();
-
-    ret->quat.w() = 1.f;
-    ret->quat.x() = .0f;
-    ret->quat.y() = .0f;
-    ret->quat.z() = .0f;
+    quat_t ret = new quat_handle(arr);
+    ret->quat.normalize();
     return ret;
 }
 
 quat_t quat_wxyz(float w, float x, float y, float z)
 {
-    quat_t ret = new quat_handle();
-
-    ret->quat.w() = w;
-    ret->quat.x() = x;
-    ret->quat.y() = y;
-    ret->quat.z() = z;
+    quat_t ret = new quat_handle(w, x, y, z);
     return ret;
 }
 
@@ -45,6 +33,7 @@ void quat_set(quat_t q, float w, float x, float y, float z)
         q->quat.x() = x;
         q->quat.y() = y;
         q->quat.z() = z;
+        q->quat.normalize();
     }
 }
 
@@ -109,5 +98,18 @@ int quat_is_valid(const quat_t q)
     return q->quat.coeffs().allFinite();
 }
 
+mat3_t to_rot_mat(const quat_t q)
+{   
+    if (q)
+    {   
+        mat3_t ret = new mat3_handle(q->quat.toRotationMatrix());
+        return ret;
+    }
+    else
+    {
+        mat3_t ret = eye3();
+        return ret;
+    }
+}
 
 }

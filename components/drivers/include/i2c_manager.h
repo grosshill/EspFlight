@@ -11,6 +11,8 @@
 #define I2C_INTERNAL_SDA GPIO_NUM_14
 #define I2C_EXTERNAL_SCL GPIO_NUM_2
 #define I2C_EXTERNAL_SDA GPIO_NUM_3
+#define I2C_ONBOARD_SCL GPIO_NUM_5
+#define I2C_ONBOARD_SDA GPIO_NUM_4
 
 /*
   According to the doc of ESP-IDF, the default value of this time_out is 100ms.

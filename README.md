@@ -6,7 +6,7 @@ Skeleton:
 |:-----|:-----|:-----|:-----|
 | 陀螺仪/加速度计驱动 | 必需   | 已实现 | BMI270 |
 | 气压计驱动 | 必需   | 已实现 | BMP280 |
-| PWM电调驱动 | 必需  | 未实现| |
+| PWM电调驱动 | 必需  | 已实现| |
 | Dshot电调驱动 | 可选   | 未实现 ||
 | 磁罗盘/GPS驱动 | 必需   | 未实现 ||
 | 测距仪/光流驱动 | 可选   | 未实现 ||
@@ -51,3 +51,9 @@ Low pass FIR filter for ddx, ddy, ddz (ax, ay, az)
 Low pass IIR filter for droll 
 Kalman filter for postion and velocity
 Cascade PID controller for postion, velocity and motor
+
+> sensors must be collabrated before using, for barometer, check base pressure, for imu, check normalized g
+
+> controllers should be added
+
+>additional filter, fuse baro z and acc z

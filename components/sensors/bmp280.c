@@ -42,18 +42,18 @@ esp_err_t bmp280_get_colab_params(i2c_master_dev_handle_t dev_handle, bmp_colab_
       Check to the datasheet of BMP280, Table 17
     */
 
-    params->T1 = (unsigned short)(data[0] | data[1] << 8);
-    params->T2 = (signed short)(data[2] | data[3] << 8);
-    params->T3 = (signed short)(data[4] | data[5] << 8);
-    params->P1 = (unsigned short)(data[6] | data[7] << 8);
-    params->P2 = (signed short)(data[8] | data[9] << 8);
-    params->P3 = (signed short)(data[10] | data[11] << 8);
-    params->P4 = (signed short)(data[12] | data[13] << 8);
-    params->P5 = (signed short)(data[14] | data[15] << 8);
-    params->P6 = (signed short)(data[16] | data[17] << 8);
-    params->P7 = (signed short)(data[18] | data[19] << 8);
-    params->P8 = (signed short)(data[20] | data[21] << 8);
-    params->P9 = (signed short)(data[22] | data[23] << 8);
+    params->T1 = (uint16_t)(data[0] | (uint16_t)data[1] << 8);
+    params->T2 = (int16_t)(data[2]  | (uint16_t)data[3] << 8);
+    params->T3 = (int16_t)(data[4]  | (uint16_t)data[5] << 8);
+    params->P1 = (uint16_t)(data[6] | (uint16_t)data[7] << 8);
+    params->P2 = (int16_t)(data[8]  | (uint16_t)data[9] << 8);
+    params->P3 = (int16_t)(data[10] | (uint16_t)data[11] << 8);
+    params->P4 = (int16_t)(data[12] | (uint16_t)data[13] << 8);
+    params->P5 = (int16_t)(data[14] | (uint16_t)data[15] << 8);
+    params->P6 = (int16_t)(data[16] | (uint16_t)data[17] << 8);
+    params->P7 = (int16_t)(data[18] | (uint16_t)data[19] << 8);
+    params->P8 = (int16_t)(data[20] | (uint16_t)data[21] << 8);
+    params->P9 = (int16_t)(data[22] | (uint16_t)data[23] << 8);
     
     return ESP_OK;
 }
@@ -62,9 +62,9 @@ esp_err_t bmp280_read_temp(i2c_master_dev_handle_t dev_handle, baro_pack_t* baro
 {
     uint8_t data[3];
     EF_ERR_CHECK(i2c_read(dev_handle, BMP280_TEMP_REG, data, 3), BMP280_TAG);
-    ESP_LOGI("BMP280", "row temp %d, %d, %d", data[0], data[1], data[2]);
+    // ESP_LOGI("BMP280", "row temp %d, %d, %d", data[0], data[1], data[2]);
     baro_pack->temp = (int32_t)(data[0] << 12 | data[1] << 4 | (data[2] >> 4 & 0x0F));
-    ESP_LOGI("BMP280", "row temp %ld", baro_pack->temp);
+    // ESP_LOGI("BMP280", "row temp %ld", baro_pack->temp);
     /*
       This colabration formula is from the datasheet of BMP280, section 3.11.3
     */
@@ -75,8 +75,8 @@ esp_err_t bmp280_read_temp(i2c_master_dev_handle_t dev_handle, baro_pack_t* baro
             * (int32_t)(params->T3)) >> 14;
     baro_pack->t_fine = var1 + var2;
     baro_pack->temp = (baro_pack->t_fine * 5 + 128) >> 8;
-    ESP_LOGI("BMP280", "calculated temp %ld", baro_pack->temp);
-    ESP_LOGI("BMP280", "t_fine %ld", baro_pack->t_fine);
+    // ESP_LOGI("BMP280", "calculated temp %ld", baro_pack->temp);
+    // ESP_LOGI("BMP280", "t_fine %ld", baro_pack->t_fine);
     /*
       Here temp value is in ℃ / 100, which means we need to devide it by 100 to get the value in ℃.
     */
@@ -122,6 +122,7 @@ float bmp280_get_height(const baro_pack_t* baro_pack)
 {
     // float temp = bmp280_read_temp() / 100.0f;
     // float press = bmp280_read_press() / 256.0f / 100.0f;
-    // ESP_LOGI("BMP280", "Temp: %.2f, Press: %.2f", temp, press);
-    return ((pow((1013.25 / (baro_pack->pressure / 256.0f / 100.0f)), 0.19026) - 1) * (baro_pack->temp / 100.0f + 273.15)) / 0.0065f;
+    // ESP_LOGI("BMP280", "Temp: %.2f, Press: %.2f", baro_pack->temp / 100.0f, baro_pack->pressure / 256.0f / 100.0f);
+    // return ((pow((1013.25 / (baro_pack->pressure / 256.0f / 100.0f)), 0.19026) - 1) * (baro_pack->temp / 100.0f + 273.15)) / 0.0065f;
+    return ((pow((1028.25 / (baro_pack->pressure / 256.0f / 100.0f)), 0.19026) - 1) * (baro_pack->temp / 100.0f + 273.15)) / 0.0065f;
 }

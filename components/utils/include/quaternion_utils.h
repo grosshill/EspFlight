@@ -32,10 +32,10 @@ void quatf_conj(quatf_t q);
 void quatf_norm(quatf_t q);
 
 /* axis angle to quaternion */
-quatf_t axis_angle2quat(float rad, float x, float y, float z);
+quatf_t axis_angle2quatf(float rad, float x, float y, float z);
 
 /* quaternion to axis angle */
-void quat2axis_angle(const quatf_t q, float* rad, float* x , float* y, float* z);
+void quatf2axis_angle(const quatf_t q, float* rad, float* x , float* y, float* z);
 
 /* check if a quaternion is singular */
 int quatf_is_valid(const quatf_t q);

@@ -1,6 +1,5 @@
 #include "eigen_types.hpp"
 #include "quaternion_utils.h"
-#include "matrix_utils.h"
 
 extern "C" {
 
@@ -26,10 +25,6 @@ void quatf_set(quatf_t q, const float w, const float x, const float y, const flo
         qh->quat.y() = y;
         qh->quat.z() = z;
         qh->quat.normalize();
-    }
-    else 
-    {
-        q = quatf_wxyz(w, x, y, z);
     }
 }
 
@@ -110,19 +105,5 @@ int quatf_is_valid(const quatf_t q)
     return qh->quat.coeffs().allFinite();
 }
 
-// mat3_t to_rot_mat(const quatf_t q)
-// {   
-//     if (q)
-//     {     
-//         quatf_handle* qh = static_cast<quatf_handle*>(q);
-//         mat3_t ret = new mat_handle(qh->quat.toRotationMatrix());
-//         return ret;
-//     }
-//     else
-//     {
-//         mat3_t ret = eye3();
-//         return ret;
-//     }
-// }
 
 }

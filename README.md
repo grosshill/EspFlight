@@ -57,3 +57,6 @@ Cascade PID controller for postion, velocity and motor
 > controllers should be added
 
 >additional filter, fuse baro z and acc z
+
+> bmi270 might need drived by SPI bus to increase work frequency, or FIFO memory is needed, currently zhe control frequency is limited up to 1.2Khz, which is obviously lower than commerical FCS like BetaFlight, which is 8Khz
+

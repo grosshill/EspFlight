@@ -8,7 +8,7 @@
 typedef struct {
     float Kp;
     float Ki;
-    quat_t rotation; /* quaternion of sensor frame relative to auxiliary frame */
+    quatf_t rotation; /* quaternion of sensor frame relative to auxiliary frame */
     float inte_err_x, inte_err_y, inte_err_z;
     float roll, pitch, yaw;
     float grax, gray, graz;

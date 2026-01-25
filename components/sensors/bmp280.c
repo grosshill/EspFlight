@@ -5,12 +5,6 @@ esp_err_t bmp280_init(i2c_master_dev_handle_t dev_handle, bmp_colab_params_t* pa
     uint8_t data = 0;
 
     /*
-      test
-    */
-    // i2c_read(dev_handle, 0x00, &data, 1);
-    // printf("%d", data);
-    // assert(data == 0x24);
-    /*
       According to the datasheet of BMP280, Table 13, when implementing indoor navigation,
       we shall use:
       - Power mode: Normal

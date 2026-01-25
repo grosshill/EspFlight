@@ -53,3 +53,7 @@ typedef struct {
     int16_t throttle_bias;
     float temp;
 } motor_t;
+
+typedef struct {
+    motor_t m1, m2, m3, m4;
+} quadrotors_out_t;

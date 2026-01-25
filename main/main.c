@@ -1,4 +1,6 @@
 #include "driver/gpio.h"
+#include "esp_log.h"
+#include "esp_timer.h"
 #include "quaternion_utils.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -6,9 +8,12 @@
 #include "bmi270.h"
 #include "bmp280.h"
 #include "mahony.h"
+#include "rom/spi_flash.h"
 #include "sensor_data_types.h"
 #include "time_manager.h"
 #include "motor_pwm.h"
+#include <stdint.h>
+#include <stdlib.h>
 
 #define DEBUG
 
@@ -61,13 +66,13 @@ void app_main(void)
     ESP_LOGI("EvoFlight", "I2C bus created successfully");
 
     // i2c_master_bus_add_device(i2c_bus_handle, &bmp180_cfg, &bmp180_handle);
-    // EF_ERR_CHECK(i2c_master_bus_add_device(i2c_bus_handle, &bmi270_cfg, &bmi270_handle), "main");
-    EF_ERR_CHECK(i2c_master_bus_add_device(i2c_bus_handle, &bmp280_cfg, &bmp280_handle), "main");
+    EF_ERR_CHECK(i2c_master_bus_add_device(i2c_bus_handle, &bmi270_cfg, &bmi270_handle), "main");
+    // EF_ERR_CHECK(i2c_master_bus_add_device(i2c_bus_handle, &bmp280_cfg, &bmp280_handle), "main");
     
     vTaskDelay(pdMS_TO_TICKS(1000));
     
-    // xTaskCreatePinnedToCore(bmi270_task, "BMI270", 10240, (void*)bmi270_handle, 4, NULL, 0);
-    xTaskCreatePinnedToCore(bmp280_task, "BMI280", 10240, (void*)bmp280_handle, 5, NULL, 0);
+    xTaskCreatePinnedToCore(bmi270_task, "BMI270", 10240, (void*)bmi270_handle, 4, NULL, 0);
+    // xTaskCreatePinnedToCore(bmp280_task, "BMI280", 10240, (void*)bmp280_handle, 5, NULL, 0);
     // xTaskCreatePinnedToCore(pwm_motor_test_task, "PWM", 4096, NULL, 5, NULL, 1);
     vTaskDelay(pdMS_TO_TICKS(100));
 
@@ -85,7 +90,7 @@ void bmi270_task(void* param)
     atti_pack_t atti_pack;
     int64_t timer;
     float dt;
-    quat_t init_quat = quat_wxyz(.5f, .5f, .5f , .5f);
+    quatf_t init_quat = quatf_wxyz(.5f, .5f, .5f , .5f);
     mahony_params_t mahony_params = {
         .Kp = 1.f,
         .Ki = 1e-3f,
@@ -93,18 +98,25 @@ void bmi270_task(void* param)
     };
     bmi270_init(bmi270_handle, bmi270_acc_range_8g, bmi270_gyro_range_2000);
     timer = esp_timer_get_time();
+    // int sample_num = 10000;
+    // int i = 0;
+    // int64_t test_timer = esp_timer_get_time();
     while(1)
     {
-        vTaskDelay(pdMS_TO_TICKS(2)); /* 500 hz*/
+        // i++;
+        // vTaskDelay(pdMS_TO_TICKS(2)); /* 500 hz*/
         bmi270_read_acc(bmi270_handle, &acc_pack, bmi270_acc_range_8g);
         bmi270_read_gyro(bmi270_handle, &gyro_pack, bmi270_gyro_range_2000);
         bmi270_read_temp(bmi270_handle, &temp_pack);
         // ESP_LOGI("BMI270", "ax: %.2f, ay: %.2f, az: %.2f", acc_pack.ax, acc_pack.ay, acc_pack.az);
         // ESP_LOGI("BMI270", "gx: %.2f, gy: %.2f, gz: %.2f", gyro_pack.gx, gyro_pack.gy, gyro_pack.gz);
         dt = dt_s(&timer);
+        // ESP_LOGI("BMI270", "%.4f", dt);
         mahony_get_deg(acc_pack, gyro_pack, &mahony_params, &atti_pack, dt);
         ESP_LOGI("BMI270", "roll: %.2f°, pitch: %.2f°, yaw: %.2f°", atti_pack.roll, atti_pack.pitch, atti_pack.yaw);
     }
+    // ESP_LOGI("BMI270_timer", "%.4f", (float)(sample_num  / 1.f) / (float)(esp_timer_get_time() - test_timer) * 1e6);
+    // vTaskDelete(NULL);
 }
 
 

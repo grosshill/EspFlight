@@ -1,72 +1,57 @@
 #pragma once
-#include <Eigen/Dense>
+#include <Eigen/Dense> 
 
+template<typename Scalar>
 struct quat_handle {
-#ifndef EIGEN_DOUBLE_DTYPE
-    Eigen::Quaternionf quat;
-    quat_handle(const float arr[4])
-    {
-        quat.w() = arr[0];
-        quat.x() = arr[1];
-        quat.y() = arr[2];
-        quat.z() = arr[3];
-    }
-    explicit quat_handle(const float w, const float x, const float y, const float z)
-    {
-        quat.w() = w;
-        quat.x() = x;
-        quat.y() = y;
-        quat.z() = z;
-    }
-#else
-    Eigen::Quaterniond quat;
-    quat_handle(const double arr[4])
-    {
-        quat.w() = arr[0];
-        quat.x() = arr[1];
-        quat.y() = arr[2];
-        quat.z() = arr[3];
-    }
-    explicit quat_handle(const double w, const double x, const double y, const double z)
-    {
-        quat.w() = w;
-        quat.x() = x;
-        quat.y() = y;
-        quat.z() = z;
-    }
-#endif
+    Eigen::Quaternion<Scalar> quat;
+    
+    quat_handle() : quat(Eigen::Quaternion<Scalar>::Identity()) {}
+    
+    explicit quat_handle(const Scalar arr[4])
+        : quat(arr[0], arr[1], arr[2], arr[3]) {quat.normalize();} // Eigen: w, x, y, z
+    
+    explicit quat_handle(Scalar w, Scalar x, Scalar y, Scalar z)
+        : quat(w, x, y, z) {quat.normalize();}
+    
+    explicit quat_handle(const Eigen::Quaternion<Scalar>& q) : quat(q) {quat.normalize();}
 };
 
-struct mat3_handle {
-#ifndef EIGEN_DOUBLE_DTYPE
-    Eigen::Matrix3f mat3;
-    mat3_handle() : mat3(Eigen::Matrix3f::Identity()) {}
-    explicit mat3_handle(const Eigen::Matrix3f& m) : mat3(m) {}
+template<typename Scalar, int Dim>
+struct mat_handle {
+    Eigen::Matrix<Scalar, Dim, Dim> mat;
     
-    explicit mat3_handle(const float arr[9])
-    {
-        mat3 << arr[0], arr[1], arr[2],
-                arr[3], arr[4], arr[5],
-                arr[6], arr[7], arr[8];
-    }
-#else
-    Eigen::Matrix3d mat3;
-    mat3_handle() : mat3(Eigen::Matrix3d::Identity()){}
-    explicit mat3_handle(const Eigen::Matrix3d& m) : mat3(m) {}
+    mat_handle() : mat(Eigen::Matrix<Scalar, Dim, Dim>::Identity()) {}
     
-    explicit mat3_handle(const double arr[9]) {
-        mat3 << arr[0], arr[1], arr[2],
-                arr[3], arr[4], arr[5],
-                arr[6], arr[7], arr[8];
-    }
-#endif
+    explicit mat_handle(const Eigen::Matrix<Scalar, Dim, Dim>& m) : mat(m) {}
+    
+    // Eigen: column first
+    explicit mat_handle(const Scalar* data)
+        : mat(Eigen::Map<const Eigen::Matrix<Scalar, Dim, Dim>>(data)) {}
 };
 
-struct vec3_handle {
-#ifndef EIGEN_DOUBLE_DTYPE
-    Eigen::Vector3f vec3;
-    vec3_handle() : vec3(Eigen::Vector3f::Zero()) {}
-#else
-    Eigen::Vector3d vec3;
-#endif
+template<typename Scalar, int Dim>
+struct vec_handle {
+    Eigen::Matrix<Scalar, Dim, 1> vec;
+    
+    vec_handle() : vec(Eigen::Matrix<Scalar, Dim, 1>::Zero()) {}
+    
+    explicit vec_handle(const Scalar* data)
+        : vec(Eigen::Map<const Eigen::Matrix<Scalar, Dim, 1>>(data)) {}
+    
+    explicit vec_handle(const Eigen::Matrix<Scalar, Dim, 1>& v) : vec(v) {}
+    
+    explicit vec_handle(Scalar value) : vec(Eigen::Matrix<Scalar, Dim, 1>::Constant(value)) {}
 };
+
+using quatf_handle = quat_handle<float>;
+using quatd_handle = quat_handle<double>;
+
+using mat3f_handle = mat_handle<float, 3>;
+using mat3d_handle = mat_handle<double, 3>;
+using mat4f_handle = mat_handle<float, 4>;
+using mat4d_handle = mat_handle<double, 4>;
+
+using vec3f_handle = vec_handle<float, 3>;
+using vec3d_handle = vec_handle<double, 3>;
+using vec4f_handle = vec_handle<float, 4>;
+using vec4d_handle = vec_handle<double, 4>;

@@ -1,5 +1,5 @@
 #pragma once
-
+#include "stdint.h"
 /* ax, ay, az is the row data of accelerometer in m/sec^2 */
 typedef struct {
     float ax;

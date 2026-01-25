@@ -91,3 +91,20 @@ usbipd bind --busid 1-4
 usbipd attach --wsl --busid 1-4
 ```
 之后听到设备断连的声音就是映射成功了。
+
+
+### 2026.1.25
+esp32 bmi270 测速
+解算 1200hz
+row  1600hz
+
+提速方案：
+
+1. 换TDK公司的IMU，使用SPI总线以及DMA技术
+2. 使用SPI总线
+3. 使用FIFO
+4. 摆大烂先将就用 √
+
+#### 关于FIFO
+直接 burst read mode读取fifo寄存器即可，其不会自增而是直接按照读取长度从fifo memory 里面从末尾开始顺序读取数据。
+详见BMI270英文手册93页寄存器0x26 FIFO_DATA的描述

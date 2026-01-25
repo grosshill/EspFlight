@@ -4,87 +4,98 @@
 
 extern "C" {
 
-quat_t quat_arr(const float arr[4])
+quatf_t quatf_arr(const float arr[4])
 {
-    quat_t ret = new quat_handle(arr);
-    ret->quat.normalize();
+    quatf_t ret = new quatf_handle(arr);
     return ret;
 }
 
-quat_t quat_wxyz(float w, float x, float y, float z)
+quatf_t quatf_wxyz(const float w, const float x, const float y, const float z)
 {
-    quat_t ret = new quat_handle(w, x, y, z);
+    quatf_t ret = new quatf_handle(w, x, y, z);
     return ret;
 }
 
-void quat_free(quat_t q)
+void quatf_set(quatf_t q, const float w, const float x, const float y, const float z)
+{
+    if (q)
+    {
+        quatf_handle* qh = static_cast<quatf_handle*>(q);
+        qh->quat.w() = w;
+        qh->quat.x() = x;
+        qh->quat.y() = y;
+        qh->quat.z() = z;
+        qh->quat.normalize();
+    }
+    else 
+    {
+        q = quatf_wxyz(w, x, y, z);
+    }
+}
+
+void quatf_free(quatf_t q)
 {
     if (q != nullptr)
     {
-        delete q;
+        delete static_cast<quatf_handle*>(q);
     }
 }
 
-void quat_set(quat_t q, float w, float x, float y, float z)
-{
-    if (q)
-    {
-        q->quat.w() = w;
-        q->quat.x() = x;
-        q->quat.y() = y;
-        q->quat.z() = z;
-        q->quat.normalize();
-    }
-}
-
-void quat_get(quat_t q, float *w, float *x, float *y, float *z)
+void quatf_get(quatf_t q, float *w, float *x, float *y, float *z)
 {
     if (q && w && x && y && z)
     {
-        *w = q->quat.w();
-        *x = q->quat.x();
-        *y = q->quat.y();
-        *z = q->quat.z();
+        quatf_handle* qh = static_cast<quatf_handle*>(q);
+        *w = qh->quat.w();
+        *x = qh->quat.x();
+        *y = qh->quat.y();
+        *z = qh->quat.z();
     }
 }
 
-void quat_mul(quat_t ret, const quat_t ql, const quat_t qr)
+quatf_t quatf_mul(const quatf_t ql, const quatf_t qr)
 {
-    if (ret && ql && qr)
-    {
-        ret->quat = ql->quat * qr->quat;
+    if (ql && qr)
+    {   
+        quatf_handle* qhl = static_cast<quatf_handle*>(ql);
+        quatf_handle* qhr = static_cast<quatf_handle*>(qr);
+        quatf_t ret = new quatf_handle(qhl->quat * qhr->quat);
+        return ret;
     }
+    return nullptr;
 }
 
-void quat_conj(quat_t q)
-{
-    if (q)
-    {
-        q->quat = q->quat.conjugate();
-    }
-}
-
-void quat_norm(quat_t q)
+void quatf_conj(quatf_t q)
 {
     if (q)
-    {
-        q->quat.normalize();
+    {   
+        quatf_handle* qh = static_cast<quatf_handle*>(q);
+        qh->quat = qh->quat.conjugate();
     }
 }
 
-void axis_angle2quat(const quat_t q, float rad, float x, float y, float z)
+void quatf_norm(quatf_t q)
 {
     if (q)
-    {
-        q->quat = Eigen::AngleAxisf(rad, Eigen::Vector3f(x, y, z));
+    {   
+        quatf_handle* qh = static_cast<quatf_handle*>(q);
+        qh->quat.normalize();
     }
 }
 
-void quat2axis_angle(const quat_t q, float *rad, float *x, float *y, float *z)
+quatf_t axis_angle2quatf(float rad, float x, float y, float z)
+{
+    quatf_handle* ret = new quatf_handle;
+    ret->quat = Eigen::AngleAxisf(rad, Eigen::Vector3f(x, y, z));
+    return static_cast<quatf_t>(ret);
+}
+
+void quatf2axis_angle(const quatf_t q, float *rad, float *x, float *y, float *z)
 {
     if (q && rad && x && y && z)
-    {
-        Eigen::AngleAxisf axis_angle(q->quat);
+    {   
+        quatf_handle* qh = static_cast<quatf_handle*>(q);
+        Eigen::AngleAxisf axis_angle(qh->quat);
         *rad = axis_angle.angle();
         *x = axis_angle.axis().x();
         *y = axis_angle.axis().y();
@@ -92,24 +103,26 @@ void quat2axis_angle(const quat_t q, float *rad, float *x, float *y, float *z)
     }
 }
 
-int quat_is_valid(const quat_t q)
+int quatf_is_valid(const quatf_t q)
 {
     if (!q) return 0;
-    return q->quat.coeffs().allFinite();
+    quatf_handle* qh = static_cast<quatf_handle*>(q);
+    return qh->quat.coeffs().allFinite();
 }
 
-mat3_t to_rot_mat(const quat_t q)
-{   
-    if (q)
-    {   
-        mat3_t ret = new mat3_handle(q->quat.toRotationMatrix());
-        return ret;
-    }
-    else
-    {
-        mat3_t ret = eye3();
-        return ret;
-    }
-}
+// mat3_t to_rot_mat(const quatf_t q)
+// {   
+//     if (q)
+//     {     
+//         quatf_handle* qh = static_cast<quatf_handle*>(q);
+//         mat3_t ret = new mat_handle(qh->quat.toRotationMatrix());
+//         return ret;
+//     }
+//     else
+//     {
+//         mat3_t ret = eye3();
+//         return ret;
+//     }
+// }
 
 }

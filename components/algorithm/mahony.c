@@ -16,7 +16,7 @@ void mahony_update(const acc_pack_t acc, const gyro_pack_t gyro, mahony_params_t
     float halfex, halfey, halfez;
     float qa, qb, qc;
     float q0, q1, q2, q3;
-    quat_get(params->rotation, &q0, &q1, &q2, &q3);
+    quatf_get(params->rotation, &q0, &q1, &q2, &q3);
 
     
 
@@ -77,21 +77,24 @@ void mahony_update(const acc_pack_t acc, const gyro_pack_t gyro, mahony_params_t
     q2 += (qa * gy - qb * gz + q3 * gx);
     q3 += (qa * gz + qb * gy - qc * gx);
 
-    // Normalise quaternion
-    norm = inv_sqrt(q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3);
-    q0 *= norm;
-    q1 *= norm;
-    q2 *= norm;
-    q3 *= norm;
+    // Normalize quaternion
+    /*
+        Auto normalization implemented by Eigen warpper
+    */
+    // norm = inv_sqrt(q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3);
+    // q0 *= norm;
+    // q1 *= norm;
+    // q2 *= norm;
+    // q3 *= norm;
 
-    quat_set(params->rotation, q0, q1, q2, q3);
+    quatf_set(params->rotation, q0, q1, q2, q3);
 }
 
 void mahony_get_rad(const acc_pack_t acc, const gyro_pack_t gyro, mahony_params_t *params, float dt)
 {   
     float q0, q1, q2, q3;
     mahony_update(acc, gyro, params, dt);
-    quat_get(params->rotation, &q0, &q1, &q2, &q3);
+    quatf_get(params->rotation, &q0, &q1, &q2, &q3);
     // ESP_LOGI("quat", "w: %f, x: %f, y: %f, z: %f", q0, q1, q2, q3);
     params->roll = atan2f(q0 * q1 + q2 * q3, 0.5f - q1 * q1 - q2 * q2);
     params->pitch = asinf(-2.0f * (q1 * q3 - q0 * q2));

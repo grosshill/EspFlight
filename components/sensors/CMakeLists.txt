@@ -2,6 +2,7 @@ set(SRC_FILES
     bmp280.c
     bmi270.c
     bmi270_config.c
+    sensor_data_types.c
     )
 
 idf_component_register(

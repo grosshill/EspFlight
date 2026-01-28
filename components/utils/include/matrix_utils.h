@@ -19,6 +19,7 @@ void vec4f_free(vec4f_t vec);
 
 /* ========== 3x3 矩阵操作 ========== */
 // 构造函数
+mat3f_t mat3f_cpy(mat3f_t mat);
 mat3f_t mat3f_eye(void);                                 // 创建单位矩阵
 mat3f_t mat3f_from_array(const float data[9]);           // 从列优先数组创建
 mat3f_t mat3f_from_quaternion(const quatf_t q);         // 从四元数创建旋转矩阵 (注意：quat为void*以降低耦合)
@@ -46,6 +47,7 @@ mat3f_t mat3f_inverse(const mat3f_t mat);                 // 逆矩阵 (假设�
 vec3f_t mat3f_solve(const mat3f_t A, const vec3f_t b);
 
 /* ========== 4x4 矩阵操作 (接口与3x3类似，保持一致性) ========== */
+mat4f_t mat4f_cpy(mat4f_t mat);
 mat4f_t mat4f_eye(void);
 mat4f_t mat4f_from_array(const float data[16]);
 mat4f_t mat4f_mul_mat(const mat4f_t a, const mat4f_t b);
@@ -79,6 +81,7 @@ mat4f_t mat4f_homo_inv(const mat4f_t H);
 
 /* ========== 3维向量操作 ========== */
 // 构造函数
+vec3f_t vec3f_cpy(vec3f_t vec);
 vec3f_t vec3f_zeros(void);                               // 零向量
 vec3f_t vec3f_from_array(const float data[3]);           // 从数组创建
 vec3f_t vec3f_from_xyz(const float x, const float y, const float z);
@@ -103,6 +106,7 @@ vec3f_t vec3f_normalized(const vec3f_t vec);              // 返回归一化副�
 
 /* ========== 4维向量操作 ========== */
 // (接口与vec3f类似，可根据需要添加齐次坐标操作)
+vec4f_t vec4f_cpy(vec4f_t vec);
 vec4f_t vec4f_zeros(void);
 vec4f_t vec4f_from_array(const float data[4]);
 // ... 其他函数

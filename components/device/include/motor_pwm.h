@@ -1,7 +1,9 @@
 #pragma once
 #include "driver/ledc.h"
+#include "matrix_utils.h"
 #include "motor_data_types.h"
 #include "debug_utils.h"
+#include "quaternion_utils.h"
 
 #define PWM_MOTOR_TAG "PWM_MOTOR"
 
@@ -35,3 +37,7 @@ typedef struct {
 esp_err_t pwm_motor_setup(const ledc_timer_config_t* timer_cfg, enum motor_num num);
 
 esp_err_t pwm_throttle_set(uint8_t id, uint16_t value);
+
+mat4f_t quad_init(const float data[16]);
+
+vec4f_t cmd2signal(mat4f_t map, vec4f_t cmd);

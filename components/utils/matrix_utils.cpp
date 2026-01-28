@@ -1,5 +1,6 @@
 #include "eigen_types.hpp"
 #include "src/Core/Matrix.h"
+#include <cstddef>
 #include "matrix_utils.h"
 
 extern "C" {
@@ -33,6 +34,19 @@ void vec4f_free(vec4f_t vec)
     if (vec)
     {
         delete static_cast<vec4f_handle*>(vec);
+    }
+}
+
+mat3f_t mat3f_cpy(mat3f_t mat)
+{
+    if (mat)
+    {
+        mat3f_t ret = new mat3f_handle(static_cast<mat3f_handle*>(mat)->mat);
+        return ret;
+    }
+    else
+    {
+        return nullptr;
     }
 }
 
@@ -242,6 +256,19 @@ vec3f_t mat3f_solve(const mat3f_t A, const vec3f_t b)
     }
 }
 
+vec3f_t vec3f_cpy(vec3f_t vec)
+{
+    if (vec)
+    {
+        vec3f_t ret = new vec3f_handle(static_cast<vec3f_handle*>(vec)->vec);
+        return ret;
+    }
+    else 
+    {
+        return nullptr;
+    }
+}
+
 vec3f_t vec3f_zeros(void)
 {
     vec3f_t ret = new vec3f_handle();
@@ -398,6 +425,19 @@ vec3f_t vec3f_normalized(const vec3f_t vec)
     if (vec)
     {
         vec3f_t ret = new vec3f_handle(static_cast<vec3f_handle*>(vec)->vec.normalized());
+        return ret;
+    }
+    else
+    {
+        return nullptr;
+    }
+}
+
+mat4f_t mat4f_cpy(mat3f_t mat)
+{
+    if (mat)
+    {
+        mat4f_t ret = new mat4f_handle(static_cast<mat4f_handle*>(mat)->mat);
         return ret;
     }
     else
@@ -650,6 +690,19 @@ mat4f_t mat4f_homo_inv(const mat4f_t H)
         ret->mat.block<3, 3>(0, 0) = inv_R;
         Eigen::Vector3f trs_t = -inv_R * static_cast<mat4f_handle*>(H)->mat.block<3, 1>(0, 3);
         ret->mat.block<3, 1>(0, 3) = trs_t;
+        return ret;
+    }
+    else
+    {
+        return nullptr;
+    }
+}
+
+vec4f_t vec4f_cpy(vec4f_t vec)
+{
+    if (vec)
+    {
+        vec4f_t ret = new vec4f_handle(static_cast<vec4f_handle*>(vec)->vec);
         return ret;
     }
     else

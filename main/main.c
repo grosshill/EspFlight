@@ -8,12 +8,12 @@
 #include "bmi270.h"
 #include "bmp280.h"
 #include "mahony.h"
-#include "rom/spi_flash.h"
 #include "sensor_data_types.h"
 #include "time_manager.h"
 #include "motor_pwm.h"
 #include <stdint.h>
 #include <stdlib.h>
+#include "matrix_utils.h"
 
 #define DEBUG
 
@@ -87,7 +87,15 @@ void bmi270_task(void* param)
     acc_pack_t acc_pack;
     gyro_pack_t gyro_pack;
     temp_pack_t temp_pack;
-    atti_pack_t atti_pack;
+    state_t* s = state();
+    // state_t* s = malloc(sizeof(state_t));
+    // s->acc = vec3f_zeros();
+    // s->ang = vec3f_zeros();
+    // s->omg = vec3f_zeros();
+    // s->pos = vec3f_zeros();
+    // s->vel = vec3f_zeros();
+    float r = 0, p = 0, y = 0;
+    float rr = 0, rp = 0, ry = 0;
     int64_t timer;
     float dt;
     quatf_t init_quat = quatf_wxyz(.5f, .5f, .5f , .5f);
@@ -112,8 +120,11 @@ void bmi270_task(void* param)
         // ESP_LOGI("BMI270", "gx: %.2f, gy: %.2f, gz: %.2f", gyro_pack.gx, gyro_pack.gy, gyro_pack.gz);
         dt = dt_s(&timer);
         // ESP_LOGI("BMI270", "%.4f", dt);
-        mahony_get_deg(acc_pack, gyro_pack, &mahony_params, &atti_pack, dt);
-        ESP_LOGI("BMI270", "roll: %.2f°, pitch: %.2f°, yaw: %.2f°", atti_pack.roll, atti_pack.pitch, atti_pack.yaw);
+        mahony_get_deg(acc_pack, gyro_pack, &mahony_params, s, dt);
+        vec3f_get(s->ang, &r, &p, &y);
+        vec3f_get(s->omg, &rr, &rp, &ry);
+        // ESP_LOGI("BMI270", "roll: %.2f°, pitch: %.2f°, yaw: %.2f°", r, p, y);
+        ESP_LOGI("BMI270", "roll: %.2f°/s, pitch: %.2f°/s, yaw: %.2f°/s", rr, rp, ry);
     }
     // ESP_LOGI("BMI270_timer", "%.4f", (float)(sample_num  / 1.f) / (float)(esp_timer_get_time() - test_timer) * 1e6);
     // vTaskDelete(NULL);

@@ -1,5 +1,10 @@
 #pragma once
 #include "stdint.h"
+#include "matrix_utils.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 /* ax, ay, az is the row data of accelerometer in m/sec^2 */
 typedef struct {
     float ax;
@@ -23,10 +28,12 @@ typedef struct {
 
 /* roll, pitch, yaw is used to represent attitude in deg */
 typedef struct {
-    float roll;
-    float pitch;
-    float yaw;
-} atti_pack_t;
+    vec3f_t ang;
+    vec3f_t omg;
+    vec3f_t pos;
+    vec3f_t vel;
+    vec3f_t acc;
+} state_t;
 
 /* temperature in ℃ */
 typedef struct {
@@ -47,3 +54,10 @@ typedef struct {
     uint32_t pressure;
     float height;   
 } baro_pack_t;
+
+state_t* state(void);
+void _state(state_t* s);
+
+#ifdef __cplusplus
+}
+#endif

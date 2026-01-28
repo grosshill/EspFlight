@@ -48,5 +48,5 @@ esp_err_t bmi270_read_acc(i2c_master_dev_handle_t dev_handle, acc_pack_t* acc_pa
 
 esp_err_t bmi270_read_temp(i2c_master_dev_handle_t dev_handle, temp_pack_t* temp_pack);
 
-void bmi270_get_pose(gyro_pack_t gyro_pack, acc_pack_t acc_pack, mahony_params_t* params, atti_pack_t* attitude);
+// void bmi270_get_pose(gyro_pack_t gyro_pack, acc_pack_t acc_pack, mahony_params_t* params, atti_pack_t* attitude);
 #endif

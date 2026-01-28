@@ -1,4 +1,5 @@
 #include "motor_pwm.h"
+#include "matrix_utils.h"
 
 const uint8_t pwm_motor_gpio[8] = {
     GPIO_NUM_4,
@@ -55,4 +56,16 @@ esp_err_t pwm_throttle_set(uint8_t id, uint16_t value)
     EF_ERR_CHECK(ledc_update_duty(PWM_SPEED_MODE, pwm_motor_channel[id]), PWM_MOTOR_TAG);
 
     return ESP_OK;
+}
+
+mat4f_t quad_init(const float data[16])
+    // const float data[16] = {1, 1, 1, 1, -1, 1, 1, -1, 1, 1, -1, 1, 1, -1, 1, -1};
+{   
+    mat4f_t quad_motor_map = mat4f_from_array(data);
+    return quad_motor_map;
+}
+
+vec4f_t cmd2signal(mat4f_t map, vec4f_t cmd)
+{
+    return mat4f_mul_vec(map, cmd);
 }

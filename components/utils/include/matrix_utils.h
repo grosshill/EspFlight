@@ -23,12 +23,13 @@ mat3f_t mat3f_cpy(mat3f_t mat);
 mat3f_t mat3f_eye(void);                                 // 创建单位矩阵
 mat3f_t mat3f_from_array(const float data[9]);           // 从列优先数组创建
 mat3f_t mat3f_from_quaternion(const quatf_t q);         // 从四元数创建旋转矩阵 (注意：quat为void*以降低耦合)
+void vec3f_rotate_inplace(const quatf_t q, vec3f_t vec);
 
 // 运算函数 (返回新对象)
 mat3f_t mat3f_add(const mat3f_t a, const mat3f_t b);
 mat3f_t mat3f_sub(const mat3f_t a, const mat3f_t b);
 mat3f_t mat3f_mul_mat(const mat3f_t a, const mat3f_t b);  // 矩阵乘法
-vec3f_t mat3f_mul_vec(const mat3f_t mat, const vec3f_t vec); // 矩阵乘以向量
+void mat3f_mul_vec_inplace(const mat3f_t mat, vec3f_t vec); // 矩阵乘以向量
 mat3f_t mat3f_mul_scalar(const mat3f_t mat, const float scalar);
 
 // 原地运算函数 (明确以 `_inplace` 后缀标识)
@@ -50,15 +51,13 @@ vec3f_t mat3f_solve(const mat3f_t A, const vec3f_t b);
 mat4f_t mat4f_cpy(mat4f_t mat);
 mat4f_t mat4f_eye(void);
 mat4f_t mat4f_from_array(const float data[16]);
-mat4f_t mat4f_mul_mat(const mat4f_t a, const mat4f_t b);
-vec4f_t mat4f_mul_vec(const mat4f_t mat, const vec4f_t vec);
 void mat4f_to_array(const mat4f_t mat, float output[16]);
 // ... 其他类似mat3f的函数，此处省略以保持简洁
 // 运算函数 (返回新对象)
 mat4f_t mat4f_add(const mat4f_t a, const mat4f_t b);
 mat4f_t mat4f_sub(const mat4f_t a, const mat4f_t b);
 mat4f_t mat4f_mul_mat(const mat4f_t a, const mat4f_t b);  // 矩阵乘法
-vec4f_t mat4f_mul_vec(const mat4f_t mat, const vec4f_t vec); // 矩阵乘以向量
+void mat4f_mul_vec_inplace(const mat4f_t mat, vec4f_t vec); // 矩阵乘以向量
 mat4f_t mat4f_mul_scalar(const mat4f_t mat, const float scalar);
 
 // 原地运算函数 (明确以 `_inplace` 后缀标识)

@@ -1,4 +1,4 @@
-set(SRC_FILES pid.c kalman.c mahony.c fir_filter.c)
+set(SRC_FILES pid.c kalman.c mahony.c fir_filter.c controller.c)
 
 idf_component_register(
     SRCS ${SRC_FILES}

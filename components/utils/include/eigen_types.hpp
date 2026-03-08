@@ -1,5 +1,8 @@
 #pragma once
 #include <Eigen/Dense> 
+#define EIGEN_NO_DEBUG           
+#define EIGEN_NO_STATIC_ASSERT
+#define EIGEN_NO_EXCEPTIONS  
 
 template<typename Scalar>
 struct quat_handle {

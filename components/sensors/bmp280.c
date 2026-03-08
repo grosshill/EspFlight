@@ -56,7 +56,7 @@ esp_err_t bmp280_read_temp(i2c_master_dev_handle_t dev_handle, baro_pack_t* baro
 {
     uint8_t data[3];
     EF_ERR_CHECK(i2c_read(dev_handle, BMP280_TEMP_REG, data, 3), BMP280_TAG);
-    // ESP_LOGI("BMP280", "row temp %d, %d, %d", data[0], data[1], data[2]);
+    ESP_LOGI("BMP280", "row temp %d, %d, %d", data[0], data[1], data[2]);
     baro_pack->temp = (int32_t)(data[0] << 12 | data[1] << 4 | (data[2] >> 4 & 0x0F));
     // ESP_LOGI("BMP280", "row temp %ld", baro_pack->temp);
     /*
@@ -118,5 +118,5 @@ float bmp280_get_height(const baro_pack_t* baro_pack)
     // float press = bmp280_read_press() / 256.0f / 100.0f;
     // ESP_LOGI("BMP280", "Temp: %.2f, Press: %.2f", baro_pack->temp / 100.0f, baro_pack->pressure / 256.0f / 100.0f);
     // return ((pow((1013.25 / (baro_pack->pressure / 256.0f / 100.0f)), 0.19026) - 1) * (baro_pack->temp / 100.0f + 273.15)) / 0.0065f;
-    return ((pow((1028.25 / (baro_pack->pressure / 256.0f / 100.0f)), 0.19026) - 1) * (baro_pack->temp / 100.0f + 273.15)) / 0.0065f;
+    return ((pow((1033.25 / (baro_pack->pressure / 256.0f / 100.0f)), 0.19026) - 1) * (baro_pack->temp / 100.0f + 273.15)) / 0.0065f;
 }

@@ -3,7 +3,10 @@
 #include "quaternion_utils.h"
 #include "sensor_data_types.h"
 
-#define PID_FREQ (1000U)
+#define PID_FREQ_1K (1000U)
+#define PID_FREQ_2K (2000U)
+#define PID_FREQ_8K (8000U)
+#define PID_FREQ_SYNC (0U)
 typedef struct {
     float kp;               // Propotional term
     float ki;               // Integral term
@@ -33,7 +36,6 @@ typedef struct
 typedef struct {
     pid_ctrl_t roll_angle;
     pid_ctrl_t pitch_angle;
-    feed_forward_t thrust_ff;
     acro_ctrl_t acro_ctrl;
 } angle_ctrl_t;
 
@@ -44,7 +46,19 @@ typedef struct {
     angle_ctrl_t angle_ctrl;    
 } vel_ctrl_t;
 
+mat4f_t mixer_init(void);
+
+acro_ctrl_t acro_ctrl_init(void);
+
+angle_ctrl_t angle_ctrl_init(void);
+
+vel_ctrl_t vel_ctrl_init(void);
+
+vec4f_t CTBR2throttle(const mat4f_t mixer, vec4f_t cmd);
+
 float track(pid_ctrl_t* pid, const float target, const float current, const float dt);
+
+float feed_forward(feed_forward_t* ff, const float target, const float current);
 
 void set_i_dyn(pid_ctrl_t* pid, const float ki);
 

@@ -14,6 +14,14 @@ void mahony_update(const acc_pack_t acc, const gyro_pack_t gyro, mahony_params_t
     float ax = acc.ax;
     float ay = acc.ay;
     float az = acc.az;
+    vec3f_t vec_gyro = vec3f_from_xyz(gx, gy, gz);
+    vec3f_t vec_acc = vec3f_from_xyz(ax, ay, az);
+    vec3f_rotate_inplace(params->imu_t_body, vec_gyro);
+    vec3f_rotate_inplace(params->imu_t_body, vec_acc);
+    vec3f_get(vec_gyro, &gx, &gy, &gz);
+    vec3f_get(vec_acc, &ax, &ay, &az);
+    vec3f_free(vec_gyro);
+    vec3f_free(vec_acc);
     float norm;
     float halfvx, halfvy, halfvz;
     float halfex, halfey, halfez;
@@ -66,9 +74,9 @@ void mahony_update(const acc_pack_t acc, const gyro_pack_t gyro, mahony_params_t
         gy += 2 * params->Kp * halfey;
         gz += 2 * params->Kp * halfez;
 
-        params->r_rate = gz;
+        params->r_rate = gx;
         params->p_rate = gy;
-        params->y_rate = gx;
+        params->y_rate = gz;
     }
 
     // Integrate rate of change of quaternion
@@ -115,7 +123,7 @@ void mahony_get_deg(const acc_pack_t acc, const gyro_pack_t gyro, mahony_params_
     mahony_get_rad(acc, gyro, params, dt);
     vec3f_set(state->omg, params->r_rate, params->p_rate, params->y_rate);
     vec3f_scale_inplace(state->omg, rad2deg);
-    vec3f_set(state->ang, params->roll, params->pitch, params->yaw + pi);
+    vec3f_set(state->ang, params->roll, params->pitch, params->yaw);
     vec3f_scale_inplace(state->ang, rad2deg);
     // attitude->roll = ;
     // attitude->pitch = ;

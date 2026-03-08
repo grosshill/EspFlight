@@ -1,20 +1,23 @@
 #include "motor_pwm.h"
+#include "freertos/idf_additions.h"
 #include "matrix_utils.h"
+#include "motor_data_types.h"
+#include "soc/gpio_num.h"
 
 const uint8_t pwm_motor_gpio[8] = {
-    GPIO_NUM_4,
-    GPIO_NUM_5,
     GPIO_NUM_6,
     GPIO_NUM_7,
     GPIO_NUM_8,
     GPIO_NUM_9,
-    GPIO_NUM_10,
-    GPIO_NUM_11,
+    GPIO_NUM_39,
+    GPIO_NUM_40,
+    GPIO_NUM_41,
+    GPIO_NUM_42,
 };
 
 const uint8_t pwm_motor_channel[8] = {
     LEDC_CHANNEL_0,
-    LEDC_CHANNEL_1,
+    LEDC_CHANNEL_1,     
     LEDC_CHANNEL_2,
     LEDC_CHANNEL_3,
     LEDC_CHANNEL_4,
@@ -65,7 +68,7 @@ mat4f_t quad_init(const float data[16])
     return quad_motor_map;
 }
 
-vec4f_t cmd2signal(mat4f_t map, vec4f_t cmd)
+void cmd2signal(mat4f_t map, vec4f_t cmd)
 {
-    return mat4f_mul_vec(map, cmd);
+    mat4f_mul_vec_inplace(map, cmd);
 }

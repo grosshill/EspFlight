@@ -76,6 +76,16 @@ mat3f_t mat3f_from_quaternion(const quatf_t q)
     }
 }
 
+void vec3f_rotate_inplace(const quatf_t q, vec3f_t vec)
+{
+    if (q && vec)
+    {
+        mat3f_t rot = mat3f_from_quaternion(q);
+        mat3f_mul_vec_inplace(rot, vec);
+        mat3f_free(rot);
+    }
+}
+
 mat3f_t mat3f_add(const mat3f_t a, const mat3f_t b)
 {
     if (a && b)
@@ -121,18 +131,13 @@ mat3f_t mat3f_mul_mat(const mat3f_t a, const mat3f_t b)
     }
 }
 
-vec3f_t mat3f_mul_vec(const mat3f_t mat, const vec3f_t vec)
+void mat3f_mul_vec_inplace(const mat3f_t mat, vec3f_t vec)
 {
     if (mat && vec)
     {
         mat3f_handle* mh = static_cast<mat3f_handle*>(mat);
         vec3f_handle* vh = static_cast<vec3f_handle*>(vec);
-        vec3f_t ret = new vec3f_handle(mh->mat * vh->vec);
-        return ret;
-    }
-    else 
-    {
-        return nullptr;
+        vh->vec = mh->mat * vh->vec;
     }
 }
 
@@ -503,18 +508,13 @@ mat4f_t mat4f_mul_mat(const mat4f_t a, const mat4f_t b)
     }
 }
 
-vec4f_t mat4f_mul_vec(const mat4f_t mat, const vec4f_t vec)
+void mat4f_mul_vec_inplace(const mat4f_t mat, vec4f_t vec)
 {
     if (mat && vec)
     {
         mat4f_handle* mh = static_cast<mat4f_handle*>(mat);
         vec4f_handle* vh = static_cast<vec4f_handle*>(vec);
-        vec4f_t ret = new vec4f_handle(mh->mat * vh->vec);
-        return ret;
-    }
-    else 
-    {
-        return nullptr;
+        vh->vec = mh->mat * vh->vec;
     }
 }
 
@@ -723,7 +723,7 @@ vec4f_t vec4f_from_array(const float data[4])
     return ret;
 }
 
-vec4f_t vec4f_from_xyz(const float x, const float y, const float z, const float t)
+vec4f_t vec4f_from_xyzt(const float x, const float y, const float z, const float t)
 {   
     const float data[4] = {x, y, z, t};
     return vec4f_from_array(data);

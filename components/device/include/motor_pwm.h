@@ -40,4 +40,4 @@ esp_err_t pwm_throttle_set(uint8_t id, uint16_t value);
 
 mat4f_t quad_init(const float data[16]);
 
-vec4f_t cmd2signal(mat4f_t map, vec4f_t cmd);
+void cmd2signal(mat4f_t map, vec4f_t cmd);

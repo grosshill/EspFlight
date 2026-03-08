@@ -10,6 +10,7 @@ typedef struct {
     float Kp;
     float Ki;
     quatf_t rotation; /* quaternion of sensor frame relative to auxiliary frame */
+    quatf_t imu_t_body; /* rot * vec_imu = vec_body*/
     float inte_err_x, inte_err_y, inte_err_z;
     float roll, pitch, yaw;
     float half_grax, half_gray, half_graz;

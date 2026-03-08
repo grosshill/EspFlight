@@ -1,5 +1,6 @@
 #include "eigen_types.hpp"
 #include "quaternion_utils.h"
+#include "matrix_utils.h"
 
 extern "C" {
 

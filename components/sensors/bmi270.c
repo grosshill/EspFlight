@@ -9,7 +9,7 @@ esp_err_t bmi270_init(i2c_master_dev_handle_t dev_handle, enum bmi270_acc_range 
     /*
       Implement initialization for BMI270, according to the datasheet.
     */
-    vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(pdMS_TO_TICKS(100));
     uint8_t data = 0x00;
     EF_ERR_CHECK(i2c_read(dev_handle, BMI270_CHIP_ID, &data, 1), BMI270_TAG);
     
